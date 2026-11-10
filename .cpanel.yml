@@ -1,13 +1,6 @@
-name: Deploy site
-
-on:
-  push:
-    branches: [main]
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Copy site files to hosting
-        run: cp index.html favicon.svg ~/public_html/origins-unknown/
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/iainmcok/public_html/origins-unknown/
+    - /bin/mkdir -p $DEPLOYPATH
+    - /bin/cp index.html favicon.svg $DEPLOYPATH
