@@ -248,6 +248,21 @@ section[data-page="report"] .ld-wrap .hero h1{font-size:clamp(2.7rem,7.5vw,5.6re
 .ld-wrap .issue-box-head{display:flex;justify-content:space-between;gap:.6rem;flex-wrap:wrap;align-items:center;
   font:700 .68rem var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--blue-soft);
   border-bottom:1px solid var(--line);padding-bottom:.6rem;margin-bottom:.8rem}
+/* Topic suggestion form (Report page) */
+.ld-wrap .suggest{margin-top:1rem;border:1px solid var(--line);border-radius:var(--rad);
+  background:var(--panel2);padding:1.1rem 1.2rem}
+.ld-wrap .suggest form{display:grid;gap:.7rem;margin-top:.8rem}
+.ld-wrap .suggest label{font:700 .68rem var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--blue-soft)}
+.ld-wrap .suggest input,.ld-wrap .suggest textarea{width:100%;box-sizing:border-box;margin-top:.35rem;
+  background:var(--panel);border:1px solid var(--line);border-radius:6px;color:var(--ink);
+  font:400 .95rem var(--sans);padding:.6rem .7rem}
+.ld-wrap .suggest input:focus,.ld-wrap .suggest textarea:focus{outline:2px solid var(--blue2);outline-offset:1px}
+.ld-wrap .suggest .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.ld-wrap .suggest button{justify-self:start;background:transparent;border:1.5px solid var(--line2);
+  border-radius:3px;color:var(--ink);font:700 .74rem var(--mono);letter-spacing:.1em;text-transform:uppercase;
+  padding:.6rem 1rem;cursor:pointer}
+.ld-wrap .suggest button:hover{border-color:var(--blue2)}
+.ld-wrap .suggest .fine{color:var(--faint);font-size:.85rem}
 .ld-wrap .empty-state{color:var(--muted);font-size:.98rem}
 .ld-wrap .empty-state strong{display:block;color:var(--ink);font:600 1rem var(--sans);margin-bottom:.3rem}
 .ld-wrap .template-row{display:grid;grid-template-columns:5.2rem 1fr;gap:.8rem;
@@ -481,6 +496,35 @@ section[data-page="report"] .ld-wrap .hero h1{font-size:clamp(2.7rem,7.5vw,5.6re
         <li><b>Worth Your Time</b><span>One link out, and why it matters.</span></li>
         <li><b>Tomorrow</b><span>The next lead, so each issue faces forward.</span></li>
       </ul>
+
+      <div class="suggest" aria-labelledby="suggest-title">
+        <div class="issue-box-head"><span id="suggest-title">Suggest a Topic</span><span>Reader Suggestions</span></div>
+        <p>Read something we should chase? A document, a case, a name from the record, a question the archive has not touched yet. Send it in. Suggestions go straight to the Report&apos;s editor. The ones that fit the archive and can be sourced may turn up as a future Lead, a Record item, or a Wire note.</p>
+        <form method="post" action="suggest.php">
+          <div>
+            <label for="sg-topic">The topic</label>
+            <input id="sg-topic" name="topic" type="text" maxlength="200" required placeholder="A person, a document, a case, a question">
+          </div>
+          <div>
+            <label for="sg-why">Why it matters, or where to look</label>
+            <textarea id="sg-why" name="why" rows="4" maxlength="2000" placeholder="A book, an archive, a link, a reason. Anything that helps check it."></textarea>
+          </div>
+          <div>
+            <label for="sg-name">Your name (optional)</label>
+            <input id="sg-name" name="name" type="text" maxlength="80" autocomplete="name">
+          </div>
+          <div>
+            <label for="sg-email">Your email (optional, only if you want an answer)</label>
+            <input id="sg-email" name="email" type="email" maxlength="120" autocomplete="email">
+          </div>
+          <div class="hp" aria-hidden="true">
+            <label>Leave this field empty<input name="website" type="text" tabindex="-1" autocomplete="off"></label>
+          </div>
+          <input type="hidden" name="ts" value="1794426425">
+          <button type="submit">Send the suggestion</button>
+          <p class="fine">Your email address is used only to answer you. Nothing is posted publicly.</p>
+        </form>
+      </div>
 
       <p class="subhead">From the Record: the existing archive</p>
       <p>The research this report grows from is already on file. The full record, files 001 to 011, from the ancient texts to the 1972 to 1995 programs, lives at Seeing at a Distance, under the same labels used here.</p>

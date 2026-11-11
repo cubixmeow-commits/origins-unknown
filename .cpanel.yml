@@ -3,4 +3,4 @@ deployment:
   tasks:
     - export DEPLOYPATH=/home/iainmcok/public_html/origins-unknown/
     - /bin/mkdir -p $DEPLOYPATH
-    - /bin/cp index.html favicon.svg $DEPLOYPATH
+    - /bin/cp index.html favicon.svg suggest.php $DEPLOYPATH
