@@ -441,34 +441,6 @@ section[data-page="seeing"] .panel p,section[data-page="seeing"] .panel li{font-
         <li><b>Tomorrow</b><span>The next lead, so each issue faces forward.</span></li>
       </ul>
     </article>
-
-      <div class="suggest" aria-labelledby="suggest-title-home">
-        <div class="issue-box-head"><span id="suggest-title-home">Suggest a Topic</span><span>Reader Suggestions</span></div>
-        <p>Read something we should chase? A document, a case, a name from the record, a question the archive has not touched yet. Send it in. Suggestions go straight to the Report&apos;s editor. The ones that fit the archive and can be sourced may turn up as a future Lead, a Record item, or a Wire note.</p>
-        <form method="post" action="suggest.php">
-          <div>
-            <label for="sgh-topic">The topic</label>
-            <input id="sgh-topic" name="topic" type="text" maxlength="200" required placeholder="A person, a document, a case, a question">
-          </div>
-          <div>
-            <label for="sgh-why">Why it matters, or where to look</label>
-            <textarea id="sgh-why" name="why" rows="4" maxlength="2000" placeholder="A book, an archive, a link, a reason. Anything that helps check it."></textarea>
-          </div>
-          <div>
-            <label for="sgh-name">Your name (optional)</label>
-            <input id="sgh-name" name="name" type="text" maxlength="80" autocomplete="name">
-          </div>
-          <div>
-            <label for="sgh-email">Your email (optional, only if you want an answer)</label>
-            <input id="sgh-email" name="email" type="email" maxlength="120" autocomplete="email">
-          </div>
-          <div class="hp" aria-hidden="true">
-            <label>Leave this field empty<input name="website" type="text" tabindex="-1" autocomplete="off"></label>
-          </div>
-          <input type="hidden" name="ts" value="1794426425">
-          <button type="submit">Send the suggestion</button>
-          <p class="fine">Your email address is used only to answer you. Nothing is posted publicly.</p>
-        </form>
   </section>
 
   <!-- HOW IT FITS -->
@@ -497,6 +469,34 @@ section[data-page="seeing"] .panel p,section[data-page="seeing"] .panel li{font-
   <div class="structure-note">
     <b>Marginal note.</b> Both doors are live. Behind the Report door, the existing research archive stays on file at <a href="#/seeing">Seeing at a Distance</a>.
   </div>
+
+      <div class="suggest" aria-labelledby="suggest-title-home">
+        <div class="issue-box-head"><span id="suggest-title-home">Suggest a Topic</span><span>Reader Suggestions</span></div>
+        <p>Read something we should chase? A document, a case, a name from the record, a question the archive has not touched yet. Send it in. Suggestions go straight to the Report&apos;s editor. The ones that fit the archive and can be sourced may turn up as a future Lead, a Record item, or a Wire note.</p>
+        <form method="post" action="suggest.php">
+          <div>
+            <label for="sgh-topic">The topic</label>
+            <input id="sgh-topic" name="topic" type="text" maxlength="200" required placeholder="A person, a document, a case, a question">
+          </div>
+          <div>
+            <label for="sgh-why">Why it matters, or where to look</label>
+            <textarea id="sgh-why" name="why" rows="4" maxlength="2000" placeholder="A book, an archive, a link, a reason. Anything that helps check it."></textarea>
+          </div>
+          <div>
+            <label for="sgh-name">Your name (optional)</label>
+            <input id="sgh-name" name="name" type="text" maxlength="80" autocomplete="name">
+          </div>
+          <div>
+            <label for="sgh-email">Your email (optional, only if you want an answer)</label>
+            <input id="sgh-email" name="email" type="email" maxlength="120" autocomplete="email">
+          </div>
+          <div class="hp" aria-hidden="true">
+            <label>Leave this field empty<input name="website" type="text" tabindex="-1" autocomplete="off"></label>
+          </div>
+          <input type="hidden" name="ts" value="1794426425">
+          <button type="submit">Send the suggestion</button>
+          <p class="fine">Your email address is used only to answer you. Nothing is posted publicly.</p>
+        </form>
 </div></div>
 </section>
 <!-- ================= REPORT ================= -->
