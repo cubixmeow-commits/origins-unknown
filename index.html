@@ -254,14 +254,18 @@ section[data-page="report"] .ld-wrap .hero h1{font-size:clamp(2.7rem,7.5vw,5.6re
 .ld-wrap .suggest form{display:grid;gap:.7rem;margin-top:.8rem}
 .ld-wrap .suggest label{font:700 .68rem var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--blue-soft)}
 .ld-wrap .suggest input,.ld-wrap .suggest textarea{width:100%;box-sizing:border-box;margin-top:.35rem;
-  background:var(--panel);border:1px solid var(--line);border-radius:6px;color:var(--ink);
-  font:400 .95rem var(--sans);padding:.6rem .7rem}
+  background:#182747;border:1px solid #4a5f92;border-radius:6px;color:var(--ink);
+  font:400 .95rem var(--sans);padding:.65rem .75rem;box-shadow:inset 0 2px 6px rgba(0,0,0,.5)}
 .ld-wrap .suggest input:focus,.ld-wrap .suggest textarea:focus{outline:2px solid var(--blue2);outline-offset:1px}
+.ld-wrap .suggest input::placeholder,.ld-wrap .suggest textarea::placeholder{color:#93a3c8}
+.ld-wrap .suggest input:hover,.ld-wrap .suggest textarea:hover{border-color:#6d86ba}
+.ld-wrap .suggest input:focus,.ld-wrap .suggest textarea:focus{border-color:var(--blue2);background:#1e3054}
 .ld-wrap .suggest .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
 .ld-wrap .suggest button{justify-self:start;background:transparent;border:1.5px solid var(--line2);
   border-radius:3px;color:var(--ink);font:700 .74rem var(--mono);letter-spacing:.1em;text-transform:uppercase;
   padding:.6rem 1rem;cursor:pointer}
-.ld-wrap .suggest button:hover{border-color:var(--blue2)}
+.ld-wrap .ld-wrap .suggest button{background:#8f1d2c;border:1px solid #c33;color:#fff;font:700 .78rem var(--mono);letter-spacing:.12em;text-transform:uppercase;padding:.7rem 1.2rem;border-radius:6px;cursor:pointer}
+.suggest button:hover{background:#a8263a;border-color:#e05555}
 .ld-wrap .suggest .fine{color:var(--faint);font-size:.85rem}
 .ld-wrap .empty-state{color:var(--muted);font-size:.98rem}
 .ld-wrap .empty-state strong{display:block;color:var(--ink);font:600 1rem var(--sans);margin-bottom:.3rem}
