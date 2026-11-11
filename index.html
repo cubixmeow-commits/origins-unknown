@@ -9,7 +9,7 @@
 <meta name="description" content="Origins Unknown: two doors. Seeds of the Throne, a novel in development, and the Origins Unknown Report, a daily research report on remote viewing, astral projection, and the ancient record behind them.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Special+Elite&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 :root{
   color-scheme:dark;
@@ -195,222 +195,99 @@ footer.site{border-top:1px solid var(--line);margin-top:2.4rem;padding:2rem 0 2.
   .closing{padding:1.6rem 1.1rem 1.3rem}
 }
 
-/* ---------- landing + report views (ld-): typewriter dossier, scoped ---------- */
+/* ---------- landing + report views (ld-): v2 dossier grid, scoped ---------- */
 .ld-wrap{
-  --ld-bg:#0a1120; --ld-bg2:#0d1730; --ld-panel:#101c36; --ld-panel2:#0b1528;
-  --ld-paper:#e9e2d0; --ld-line:#2a3f6b; --ld-linesoft:#1d2c4e;
-  --ld-ink:#ece7d8; --ld-inkdim:#b9c2d4; --ld-inkfaint:#8a97b3;
-  --ld-steel:#8fb8dd; --ld-steeldeep:#4a7cae;
-  --ld-crimson:#c0392f; --ld-crimsonb:#e2574a; --ld-gold:#c9a86a;
-  --ld-disp:"Special Elite","Courier Prime",monospace;
-  --ld-mono:"Courier Prime",ui-monospace,SFMono-Regular,Menlo,monospace;
-  --ld-body:"EB Garamond",Georgia,"Times New Roman",serif;
-  position:relative;color:var(--ld-ink);font-family:var(--ld-body);font-size:1.06rem;line-height:1.6;
-  max-width:1140px;margin:0 auto;padding:0 22px;
+  position:relative;color:var(--body);font-family:var(--sans);
+  width:var(--wrap);margin-inline:auto;
 }
-.ld-wrap::before{
-  content:"";position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.05;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.9'/%3E%3C/svg%3E");
-}
-.ld-wrap>.ld-in{position:relative;z-index:1}
-.ld-wrap a{color:inherit}
-/* paper grain over everything, kept faint so type stays crisp */
-.ld-wrap button,
-.ld-wrap a.btn,
-.ld-wrap nav a,
-.ld-wrap .sublink{min-height:2.25rem}
-.ld-wrap ::selection{background:rgba(192,57,47,.45)}
-/* ---------- Header: a file tab, not a navbar ---------- */
-/* ---------- Hero: typed sheet, ragged left edge ---------- */
-.ld-wrap .hero{padding:58px 0 10px 6px;position:relative}
-.ld-wrap .file-line{display:flex;align-items:center;gap:14px;flex-wrap:wrap;
-    font-family:var(--ld-mono);
-    font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ld-inkfaint);}
-.ld-wrap .file-line .rule{flex:1;height:2px;min-width:40px;
-    background:repeating-linear-gradient(90deg,var(--ld-line) 0 7px,transparent 7px 11px);opacity:.7}
-.ld-wrap .redact{display:inline-block;background:#05080f;color:#05080f;
-    padding:0 10px;border-radius:1px;transform:rotate(-.6deg);
-    box-shadow:0 0 0 1px rgba(0,0,0,.6);user-select:none;}
-.ld-wrap .hero h1{font-family:var(--ld-disp);font-weight:400;
-    font-size:clamp(2.9rem, 7.5vw, 5.1rem);
-    line-height:.94;margin:22px 0 6px;letter-spacing:.01em;}
-.ld-wrap .hero h1 .l2{display:block;margin-left:clamp(18px,5vw,64px);color:var(--ld-steel);position:relative;width:max-content;max-width:100%}
-/* hand-circled annotation around "Unknown" */
-.ld-wrap .hero h1 .l2 svg{position:absolute;left:-4%;top:-14%;width:108%;height:128%;overflow:visible;pointer-events:none;}
-.ld-wrap .hero h1 .l2 svg path{fill:none;stroke:var(--ld-crimsonb);stroke-width:2.4;stroke-linecap:round;opacity:.85}
-.ld-wrap .tagline{font-size:clamp(1.22rem, 2.4vw, 1.5rem);font-weight:500;
-    color:var(--ld-ink);max-width:600px;margin:20px 0 0 4px;}
-.ld-wrap .tagline em{color:var(--ld-gold);font-style:italic;
-    background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='5' viewBox='0 0 60 5'%3E%3Cpath d='M1 3.4 C 12 1.2, 24 4.4, 36 2.6 S 54 1.8, 59 3' fill='none' stroke='%23e2574a' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E") left bottom / 100% 5px no-repeat;
-    padding-bottom:6px;}
-.ld-wrap .hero-note{margin:14px 0 0 4px;font-family:var(--ld-mono);font-size:.86rem;line-height:1.65;
-    color:var(--ld-inkfaint);max-width:560px;}
-.ld-wrap .hero-note::before{content:"» ";color:var(--ld-crimsonb)}
-/* ---------- Doors: two folders, not two matching cards ---------- */
-.ld-wrap .doors{display:grid;grid-template-columns:.94fr 1.06fr;gap:26px;
-    padding:30px 0 10px;align-items:start;}
-.ld-wrap .door{position:relative;
-    border:1.5px solid var(--ld-line);
-    background:
-      repeating-linear-gradient(180deg, transparent 0 30px, rgba(143,184,221,.045) 30px 31px),
-      linear-gradient(175deg, var(--ld-panel), var(--ld-panel2));
-    padding:28px 26px 26px;
-    display:flex;flex-direction:column;}
-.ld-wrap .door.seeds{border-radius:4px 18px 5px 12px;
-    transform:rotate(-.35deg);
-    box-shadow:5px 6px 0 rgba(3,6,12,.55);
-    margin-left:2px;}
-.ld-wrap .door.report{border-radius:16px 4px 14px 5px;
-    margin-top:34px;
-    box-shadow:-5px 7px 0 rgba(3,6,12,.55);}
-/* folder tab notch */
-.ld-wrap .door::before{content:"";position:absolute;top:-11px;left:22px;width:92px;height:11px;
-    background:var(--ld-panel);border:1.5px solid var(--ld-line);border-bottom:none;
-    border-radius:6px 10px 0 0;}
-.ld-wrap .door.report::before{left:auto;right:30px;background:#12203e}
-/* punched holes down the left edge */
-.ld-wrap .door::after{content:"";position:absolute;left:7px;top:64px;bottom:26px;width:7px;
-    background-image:radial-gradient(circle 3px at 3.5px 3.5px, rgba(5,8,15,.9) 3px, rgba(143,184,221,.25) 3.6px, transparent 4.2px);
-    background-size:7px 44px;background-repeat:repeat-y;opacity:.8;}
-.ld-wrap .door-top{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;padding-left:12px}
-.ld-wrap .door-kicker{font-family:var(--ld-mono);
-    font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ld-inkfaint);padding-top:8px;}
-.ld-wrap .stamp{font-family:var(--ld-mono);
-    font-size:.74rem;font-weight:700;letter-spacing:.24em;text-transform:uppercase;
-    padding:8px 11px 7px;color:var(--ld-crimsonb);white-space:nowrap;
-    border:2.5px solid var(--ld-crimsonb);border-radius:3px;
-    box-shadow:inset 0 0 0 1.5px rgba(10,17,32,.9), inset 0 0 0 3px var(--ld-crimsonb);
-    background:rgba(192,57,47,.07);
-    transform:rotate(2.6deg);opacity:.92;
-    mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='r'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.55' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.82 0.18'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23r)'/%3E%3C/svg%3E");
-    mask-size:120px;}
-.ld-wrap .stamp.blue{border-color:var(--ld-steel);color:var(--ld-steel);background:rgba(143,184,221,.07);
-    box-shadow:inset 0 0 0 1.5px rgba(10,17,32,.9), inset 0 0 0 3px var(--ld-steel);
-    transform:rotate(-4.2deg);opacity:.85;}
-.ld-wrap .door h2{font-family:var(--ld-disp);font-weight:400;
-    font-size:2rem;line-height:1.08;margin:16px 0 12px;padding-left:12px;}
-.ld-wrap .door.report h2{font-size:1.82rem}
-.ld-wrap .door p{color:var(--ld-inkdim);margin:0 0 12px;padding-left:12px;font-size:1.08rem}
-.ld-wrap .door p strong{color:var(--ld-ink);font-weight:600}
-.ld-wrap .btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;
-    min-height:2.75rem;padding:11px 18px;
-    text-decoration:none;font-family:var(--ld-mono);font-weight:700;font-size:.92rem;letter-spacing:.04em;
-    border:1.5px solid var(--ld-steeldeep);background:#152a4e;color:var(--ld-ink);
-    border-radius:2px 9px 3px 8px;
-    box-shadow:3px 3px 0 rgba(3,6,12,.65);
-    margin:8px 0 0 12px;align-self:flex-start;
-    transition:transform .12s ease, box-shadow .12s ease, background .12s ease;}
-.ld-wrap .btn:hover,
-.ld-wrap .btn:focus-visible{border-color:var(--ld-steel);background:#1a315c;transform:translate(-1px,-1px);box-shadow:4px 4px 0 rgba(3,6,12,.65)}
-.ld-wrap .btn .arr{color:var(--ld-gold)}
-.ld-wrap .subhead{margin:26px 0 10px;padding-left:12px;
-    font-family:var(--ld-mono);
-    font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ld-gold);}
-.ld-wrap .sublinks{display:flex;flex-wrap:wrap;gap:8px;padding-left:12px}
-.ld-wrap .sublink{display:inline-flex;align-items:center;gap:7px;
-    padding:7px 12px 7px 10px;border:1px solid var(--ld-linesoft);border-radius:2px 7px 2px 6px;
-    background:var(--ld-bg2);text-decoration:none;font-family:var(--ld-mono);font-size:.84rem;color:var(--ld-inkdim);}
-.ld-wrap .sublink::before{content:"";width:5px;height:5px;background:var(--ld-steeldeep);transform:rotate(45deg);flex:none}
-.ld-wrap .sublink:nth-child(odd){transform:rotate(-.5deg)}
-.ld-wrap .sublink:nth-child(3n){transform:rotate(.6deg)}
-.ld-wrap .sublink:hover,
-.ld-wrap .sublink:focus-visible{color:var(--ld-ink);border-color:var(--ld-steeldeep)}
-/* Latest memo, clipped inside the Report door */
-.ld-wrap .latest{position:relative;margin:6px 0 4px 12px;
-    border:1px solid var(--ld-line);border-left:3px solid var(--ld-crimson);
-    background:rgba(233,226,208,.05);
-    padding:16px 16px 14px 18px;
-    transform:rotate(-.7deg);}
-.ld-wrap .latest::before{/* tape strip */
-    content:"";position:absolute;top:-11px;left:50%;width:86px;height:20px;
-    transform:translateX(-50%) rotate(1.6deg);
-    background:rgba(201,168,106,.34);border-left:1px dashed rgba(233,226,208,.35);border-right:1px dashed rgba(233,226,208,.35);}
-.ld-wrap .latest-label{font-family:var(--ld-mono);
-    font-size:.68rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--ld-crimsonb);}
-.ld-wrap .latest-body strong{display:block;font-family:var(--ld-disp);font-weight:400;font-size:1.08rem;margin-top:7px;color:var(--ld-ink)}
-.ld-wrap .latest-body p{margin:5px 0 0;padding-left:0;color:var(--ld-inkdim);font-size:1rem}
-/* Report issue area: a typed ledger sheet */
-.ld-wrap .issue-box{margin:20px 0 0 12px;border:1px dashed var(--ld-line);border-radius:3px 10px 3px 8px;
-    background:rgba(5,8,15,.5);padding:16px 16px 12px;}
-.ld-wrap .issue-box-head{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center;
-    font-family:var(--ld-mono);
-    font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ld-inkfaint);
-    border-bottom:2px solid var(--ld-linesoft);padding-bottom:10px;margin-bottom:12px;}
-.ld-wrap .empty-state{color:var(--ld-inkdim);font-size:1.02rem}
-.ld-wrap .empty-state strong{color:var(--ld-ink);display:block;font-family:var(--ld-disp);font-weight:400;font-size:1.02rem;margin-bottom:5px}
-.ld-wrap .template-row{display:grid;grid-template-columns:78px 1fr;gap:10px;
-    padding:9px 0 2px;border-top:1px dotted var(--ld-line);
-    font-family:var(--ld-mono);font-size:.82rem;color:var(--ld-inkfaint);}
-.ld-wrap .template-row b{color:var(--ld-gold);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;padding-top:2px}
-/* six sections as ledger rows with dotted leaders */
-.ld-wrap .format-list{list-style:none;margin:4px 0 0 12px;padding:0}
-.ld-wrap .format-list li{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;
-    padding:9px 2px;border-bottom:1px solid var(--ld-linesoft);
-    font-size:1rem;color:var(--ld-inkdim);}
+.ld-wrap ::selection{background:rgba(155,28,46,.55);color:#fff}
+/* ---------- Hero: v2 giant display ---------- */
+.ld-wrap .hero{padding:2.6rem 0 1.6rem}
+.ld-wrap .file-line{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;
+  font:700 .7rem var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--faint)}
+.ld-wrap .file-line .rule{flex:1;height:1px;min-width:40px;background:var(--line2)}
+.ld-wrap .hero h1{font-family:var(--disp);font-weight:400;text-transform:uppercase;
+  line-height:.92;letter-spacing:.005em;color:var(--ink);
+  font-size:clamp(3.4rem,10.5vw,8.2rem);margin:1.1rem 0 .4rem}
+section[data-page="report"] .ld-wrap .hero h1{font-size:clamp(2.7rem,7.5vw,5.6rem)}
+.ld-wrap .hero h1 .l2{display:block}
+.ld-wrap .ld-red{color:var(--red2)}
+.ld-wrap .tagline{font-size:1.14rem;line-height:1.6;color:var(--ink);max-width:62ch;margin:1.3rem 0 0}
+.ld-wrap .tagline em{color:var(--gold2)}
+.ld-wrap .hero-note{color:var(--muted);max-width:64ch;margin:.9rem 0 0}
+/* ---------- Doors: symmetrical v2 panels ---------- */
+.ld-wrap .doors{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;
+  padding:1.1rem 0 0;align-items:stretch}
+.ld-wrap .door{position:relative;border:1px solid var(--line);border-radius:var(--rad);
+  background:linear-gradient(180deg,rgba(143,176,232,.07),rgba(143,176,232,0) 42%),linear-gradient(160deg,rgba(155,28,46,.05),transparent 55%),var(--panel);
+  padding:1.4rem;display:flex;flex-direction:column}
+.ld-wrap .door-top{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem}
+.ld-wrap .door-kicker{font:700 .7rem var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--red2);padding-top:.3rem}
+.ld-wrap .stamp.blue{color:var(--blue2);border-color:var(--blue);background:rgba(46,74,138,.14)}
+.ld-wrap .door h2{font:400 1.9rem/1.05 var(--disp);letter-spacing:.02em;text-transform:uppercase;color:var(--ink);margin:1rem 0 .8rem}
+.ld-wrap .door p{color:var(--body)}
+.ld-wrap .door p strong{color:var(--ink)}
+.ld-wrap .btn{margin-top:.2rem;align-self:flex-start}
+.ld-wrap .subhead{margin:1.4rem 0 .6rem;font:700 .7rem var(--mono);
+  letter-spacing:.18em;text-transform:uppercase;color:var(--blue-soft)}
+.ld-wrap .sublinks{display:flex;flex-wrap:wrap;gap:.5rem}
+.ld-wrap .sublink{display:inline-flex;align-items:center;min-height:2.4rem;
+  padding:.42rem .7rem;border:1.5px solid var(--line2);border-radius:3px;
+  background:transparent;text-decoration:none;font:700 .72rem var(--mono);
+  letter-spacing:.08em;color:var(--muted)}
+.ld-wrap .sublink:hover,.ld-wrap .sublink:focus-visible{color:var(--ink);border-color:var(--blue2)}
+/* Latest strip: flat panel inside the Report door */
+.ld-wrap .latest{border:1px solid var(--line);border-left:3px solid var(--red);
+  border-radius:8px;background:var(--panel2);padding:1rem 1.2rem;margin:.4rem 0 1rem}
+.ld-wrap .latest-label{font:700 .68rem var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--red2)}
+.ld-wrap .latest-body strong{display:block;font:600 1.05rem/1.35 var(--sans);color:var(--ink);margin-top:.5rem}
+.ld-wrap .latest-body p{margin:.4rem 0 0;color:var(--muted);font-size:.95rem}
+/* Report issue area */
+.ld-wrap .issue-box{margin-top:1rem;border:1px solid var(--line);border-radius:var(--rad);
+  background:var(--panel2);padding:1.1rem 1.2rem}
+.ld-wrap .issue-box-head{display:flex;justify-content:space-between;gap:.6rem;flex-wrap:wrap;align-items:center;
+  font:700 .68rem var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--blue-soft);
+  border-bottom:1px solid var(--line);padding-bottom:.6rem;margin-bottom:.8rem}
+.ld-wrap .empty-state{color:var(--muted);font-size:.98rem}
+.ld-wrap .empty-state strong{display:block;color:var(--ink);font:600 1rem var(--sans);margin-bottom:.3rem}
+.ld-wrap .template-row{display:grid;grid-template-columns:5.2rem 1fr;gap:.8rem;
+  padding:.6rem 0 0;border-top:1px solid var(--line);margin-top:.8rem;
+  font:400 .82rem var(--mono);color:var(--faint)}
+.ld-wrap .template-row b{color:var(--blue2);font-weight:700;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;padding-top:.15rem}
+/* Six sections as clean ledger rows (hairline rules, no dotted leaders) */
+.ld-wrap .format-list{list-style:none;margin:0;padding:0}
+.ld-wrap .format-list li{display:grid;grid-template-columns:10.5rem 1fr;gap:.9rem;align-items:baseline;
+  padding:.55rem 0;border-bottom:1px solid var(--line);font-size:.95rem;color:var(--muted)}
 .ld-wrap .format-list li:last-child{border-bottom:none}
-.ld-wrap .format-list li b{font-family:var(--ld-mono);font-weight:700;font-size:.86rem;color:var(--ld-ink);letter-spacing:.02em;white-space:nowrap}
-.ld-wrap .format-list li .dots{flex:1;min-width:22px;border-bottom:2px dotted var(--ld-line);transform:translateY(-4px)}
-.ld-wrap .format-list li span{flex-basis:100%;padding-left:2px}
-@media (min-width:520px){
-.ld-wrap .format-list li span{flex-basis:auto;max-width:56%}
-}
-/* ---------- How it fits: uneven file cards ---------- */
-.ld-wrap .fits{margin:30px 0 0;padding:6px 2px 0}
-.ld-wrap .fits h2{font-family:var(--ld-disp);font-weight:400;
-    font-size:1.55rem;margin:0 0 4px;}
-.ld-wrap .fits h2::after{content:"";display:block;width:118px;height:3px;margin-top:8px;background:var(--ld-crimson);transform:rotate(-.7deg);border-radius:2px}
-.ld-wrap .fits > p{color:var(--ld-inkdim);margin:10px 0 20px;max-width:660px;font-size:1.08rem}
-.ld-wrap .fits-grid{display:grid;grid-template-columns:1.18fr 1fr .92fr;gap:20px;align-items:start}
-.ld-wrap .fits-card{border:1.5px solid var(--ld-linesoft);background:var(--ld-panel2);padding:18px}
-.ld-wrap .fits-card:nth-child(1){border-radius:3px 13px 4px 10px;transform:rotate(-.3deg)}
-.ld-wrap .fits-card:nth-child(2){border-radius:12px 3px 11px 4px;margin-top:22px}
-.ld-wrap .fits-card:nth-child(3){border-radius:4px 10px 3px 13px;transform:rotate(.35deg);margin-top:6px}
-.ld-wrap .fits-card h3{margin:0 0 7px;font-family:var(--ld-mono);font-weight:700;font-size:.94rem;letter-spacing:.03em}
-.ld-wrap .fits-card p{margin:0;color:var(--ld-inkdim);font-size:1rem}
-.ld-wrap .evidence{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
-.ld-wrap .evidence span{font-family:var(--ld-mono);
-    font-size:.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
-    padding:6px 9px;border:2px solid var(--ld-steel);border-radius:3px;color:var(--ld-steel);background:rgba(143,184,221,.06);}
-.ld-wrap .evidence span:nth-child(1){transform:rotate(-1.8deg);opacity:.95}
-.ld-wrap .evidence span:nth-child(2){color:var(--ld-gold);border-color:var(--ld-gold);background:rgba(201,168,106,.06);transform:rotate(1.2deg);opacity:.88}
-.ld-wrap .evidence span:nth-child(3){color:#c3b2e3;border-color:#8d7bb5;background:rgba(141,123,181,.08);transform:rotate(-.8deg);opacity:.92}
-.ld-wrap .evidence span:nth-child(4){color:var(--ld-crimsonb);border-color:var(--ld-crimsonb);background:rgba(192,57,47,.07);transform:rotate(2.2deg);opacity:.85}
+.ld-wrap .format-list li b{font:700 .84rem var(--mono);color:var(--ink);letter-spacing:.02em;white-space:nowrap}
+/* ---------- How it fits: v2 bento grid ---------- */
+.ld-wrap .fits{margin-top:2.2rem}
+.ld-wrap .fits h2{font:400 1.9rem/1.05 var(--disp);letter-spacing:.02em;text-transform:uppercase;color:var(--ink)}
+.ld-wrap .fits>p{color:var(--muted);margin-top:.7rem;max-width:66ch}
+.ld-wrap .fits-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.9rem;margin-top:1rem;align-items:stretch}
+.ld-wrap .fits-card{border:1px solid var(--line);border-radius:var(--rad);
+  background:linear-gradient(180deg,rgba(143,176,232,.07),rgba(143,176,232,0) 42%),linear-gradient(160deg,rgba(155,28,46,.05),transparent 55%),var(--panel);
+  padding:1.4rem}
+.ld-wrap .fits-card h3{font:600 1.08rem/1.35 var(--sans);color:var(--ink);margin:0 0 .5rem}
+.ld-wrap .fits-card p{margin:0;color:var(--body);font-size:.95rem}
+.ld-wrap .evidence{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.9rem}
+.ld-wrap .evidence span{font:700 .66rem var(--mono);letter-spacing:.14em;text-transform:uppercase;
+  color:var(--red-soft);border:1.5px solid var(--red);border-radius:3px;
+  padding:.28rem .55rem;background:rgba(155,28,46,.12);white-space:nowrap}
 /* ---------- Marginal note ---------- */
-.ld-wrap .structure-note{margin:26px 0 0 10px;padding:4px 0 4px 16px;border-left:3px solid var(--ld-gold);
-    color:var(--ld-inkfaint);font-family:var(--ld-mono);font-size:.84rem;line-height:1.7;max-width:760px;
-    transform:rotate(-.25deg);}
-.ld-wrap .structure-note b{color:var(--ld-gold);letter-spacing:.08em;text-transform:uppercase;font-size:.74rem}
-/* ---------- Footer ---------- */
-.ld-wrap .footer-links a:hover{color:var(--ld-ink);text-decoration-color:var(--ld-gold)}
-@media (max-width: 880px){
-.ld-wrap .doors{grid-template-columns:1fr;gap:22px}
-.ld-wrap .door.report{margin-top:10px}
-.ld-wrap .door.seeds{transform:none}
+.ld-wrap .structure-note{margin-top:1.6rem;padding-left:.8rem;border-left:2px solid var(--red);
+  color:var(--faint);font:400 .84rem/1.7 var(--mono);max-width:76ch}
+.ld-wrap .structure-note b{color:var(--muted);letter-spacing:.08em;text-transform:uppercase;font-size:.74rem}
+@media (max-width:880px){
+.ld-wrap .doors{grid-template-columns:1fr}
 .ld-wrap .fits-grid{grid-template-columns:1fr}
-.ld-wrap .fits-card:nth-child(2),
-.ld-wrap .fits-card:nth-child(3){margin-top:0}
 }
 @media (max-width:560px){
-.ld-wrap .hero{padding:38px 0 6px 0}
-.ld-wrap .hero h1{font-size:clamp(2.5rem,13.5vw,3.4rem)}
-.ld-wrap .door{padding:24px 18px 22px}
-.ld-wrap .door h2{font-size:1.66rem}
-.ld-wrap .door.report h2{font-size:1.52rem}
-.ld-wrap .door-top,
-.ld-wrap .door h2,
-.ld-wrap .door p,
-.ld-wrap .subhead,
-.ld-wrap .sublinks,
-.ld-wrap .issue-box,
-.ld-wrap .format-list{padding-left:0;margin-left:0}
-.ld-wrap .latest{margin-left:0}
-.ld-wrap .btn{margin-left:0}
-.ld-wrap .door::after{display:none}
-.ld-wrap .structure-note{margin-left:0}
+.ld-wrap .door{padding:1.1rem}
+.ld-wrap .fits-card{padding:1.1rem}
+.ld-wrap .format-list li{grid-template-columns:1fr;gap:.2rem}
 }
-@media (prefers-reduced-motion: reduce){
-.ld-wrap .btn{transition:none}
-}
+
 </style>
 </head>
 <body>
@@ -447,8 +324,8 @@ footer.site{border-top:1px solid var(--line);margin-top:2.4rem;padding:2rem 0 2.
 <div class="ld-wrap"><div class="ld-in">
   <!-- HERO -->
   <div class="hero" aria-labelledby="hero-title">
-    <div class="file-line"><span>File: Origins Unknown</span><span class="redact" aria-hidden="true">redacted</span><span class="rule"></span><span>Two doors</span></div>
-    <h1 id="hero-title">Origins <span class="l2">Unknown<svg viewBox="0 0 300 90" preserveAspectRatio="none" aria-hidden="true"><path d="M14 52 C 30 14, 130 4, 205 10 C 268 15, 296 30, 290 50 C 283 74, 190 88, 108 84 C 46 81, 8 72, 16 46"/></svg></span></h1>
+    <div class="file-line"><span>File: Origins Unknown</span><span class="rule"></span><span>Two doors</span></div>
+    <h1 id="hero-title">Origins <span class="l2"><span class="ld-red">Unknown</span></span></h1>
     <p class="tagline">One story. One daily research report. <em>Tagline still to be settled.</em></p>
     <p class="hero-note">This page is the new front door. Pick the fiction, or pick the research. Everything else on the site sits behind one of these two.</p>
   </div>
@@ -510,12 +387,12 @@ footer.site{border-top:1px solid var(--line);margin-top:2.4rem;padding:2rem 0 2.
 
       <p class="subhead">Every issue, same six sections</p>
       <ul class="format-list">
-        <li><b>The Lead</b><span class="dots" aria-hidden="true"></span><span>The day&apos;s main topic, written plain.</span></li>
-        <li><b>On the Wire</b><span class="dots" aria-hidden="true"></span><span>What is moving today, labeled as trend.</span></li>
-        <li><b>From the Record</b><span class="dots" aria-hidden="true"></span><span>One verified item from the deeper archive.</span></li>
-        <li><b>The Overlap</b><span class="dots" aria-hidden="true"></span><span>Where the day touches Seeds of the Throne.</span></li>
-        <li><b>Worth Your Time</b><span class="dots" aria-hidden="true"></span><span>One link out, and why it matters.</span></li>
-        <li><b>Tomorrow</b><span class="dots" aria-hidden="true"></span><span>The next lead, so each issue faces forward.</span></li>
+        <li><b>The Lead</b><span>The day&apos;s main topic, written plain.</span></li>
+        <li><b>On the Wire</b><span>What is moving today, labeled as trend.</span></li>
+        <li><b>From the Record</b><span>One verified item from the deeper archive.</span></li>
+        <li><b>The Overlap</b><span>Where the day touches Seeds of the Throne.</span></li>
+        <li><b>Worth Your Time</b><span>One link out, and why it matters.</span></li>
+        <li><b>Tomorrow</b><span>The next lead, so each issue faces forward.</span></li>
       </ul>
     </article>
   </section>
@@ -552,8 +429,8 @@ footer.site{border-top:1px solid var(--line);margin-top:2.4rem;padding:2rem 0 2.
 <section class="page" data-page="report" aria-label="The Origins Unknown Report">
 <div class="ld-wrap"><div class="ld-in">
   <div class="hero" aria-labelledby="report-page-title">
-    <div class="file-line"><span>File: The Report</span><span class="redact" aria-hidden="true">redacted</span><span class="rule"></span><span>Daily Research</span></div>
-    <h1 id="report-page-title">The Origins <span class="l2">Unknown Report</span></h1>
+    <div class="file-line"><span>File: The Report</span><span class="rule"></span><span>Daily Research</span></div>
+    <h1 id="report-page-title">The Origins <span class="l2"><span class="ld-red">Unknown</span> Report</span></h1>
     <p class="tagline">A daily research report. <em>Part blog, part newsletter, part research file.</em></p>
     <p class="hero-note">Remote viewing, astral projection, the ancient and spiritual record, and where that record overlaps with the novel. Every issue is numbered and dated, and every research item carries its evidence label.</p>
   </div>
@@ -584,12 +461,12 @@ footer.site{border-top:1px solid var(--line);margin-top:2.4rem;padding:2rem 0 2.
 
       <p class="subhead">Every issue, same six sections</p>
       <ul class="format-list">
-        <li><b>The Lead</b><span class="dots" aria-hidden="true"></span><span>The day&apos;s main topic, written plain.</span></li>
-        <li><b>On the Wire</b><span class="dots" aria-hidden="true"></span><span>What is moving today, labeled as trend.</span></li>
-        <li><b>From the Record</b><span class="dots" aria-hidden="true"></span><span>One verified item from the deeper archive.</span></li>
-        <li><b>The Overlap</b><span class="dots" aria-hidden="true"></span><span>Where the day touches Seeds of the Throne.</span></li>
-        <li><b>Worth Your Time</b><span class="dots" aria-hidden="true"></span><span>One link out, and why it matters.</span></li>
-        <li><b>Tomorrow</b><span class="dots" aria-hidden="true"></span><span>The next lead, so each issue faces forward.</span></li>
+        <li><b>The Lead</b><span>The day&apos;s main topic, written plain.</span></li>
+        <li><b>On the Wire</b><span>What is moving today, labeled as trend.</span></li>
+        <li><b>From the Record</b><span>One verified item from the deeper archive.</span></li>
+        <li><b>The Overlap</b><span>Where the day touches Seeds of the Throne.</span></li>
+        <li><b>Worth Your Time</b><span>One link out, and why it matters.</span></li>
+        <li><b>Tomorrow</b><span>The next lead, so each issue faces forward.</span></li>
       </ul>
 
       <p class="subhead">From the Record: the existing archive</p>
