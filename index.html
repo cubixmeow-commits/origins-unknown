@@ -260,6 +260,22 @@ section[data-page="report"] .ld-wrap .hero h1{font-size:clamp(2.7rem,7.5vw,5.6re
   padding:.55rem 0;border-bottom:1px solid var(--line);font-size:.95rem;color:var(--muted)}
 .ld-wrap .format-list li:last-child{border-bottom:none}
 .ld-wrap .format-list li b{font:700 .84rem var(--mono);color:var(--ink);letter-spacing:.02em;white-space:nowrap}
+/* Report issue body (No. 001 onward) */
+.ld-wrap .issue{margin-top:1rem;border:1px solid var(--line);border-radius:var(--rad);
+  background:var(--panel2);padding:1.2rem 1.3rem}
+.ld-wrap .issue-head{display:flex;justify-content:space-between;gap:.6rem;flex-wrap:wrap;align-items:center;
+  font:700 .68rem var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--blue-soft);
+  border-bottom:1px solid var(--line);padding-bottom:.6rem;margin-bottom:.9rem}
+.ld-wrap .issue h3{font:400 1.55rem/1.1 var(--disp);letter-spacing:.02em;text-transform:uppercase;color:var(--ink);margin:.2rem 0 .8rem}
+.ld-wrap .issue h4{margin:1.5rem 0 .5rem;font:700 .72rem var(--mono);
+  letter-spacing:.18em;text-transform:uppercase;color:var(--blue-soft)}
+.ld-wrap .issue h4 .h4note{text-transform:none;letter-spacing:.02em;color:var(--faint);font-weight:400}
+.ld-wrap .issue p{color:var(--body);margin:.55rem 0}
+.ld-wrap .issue p.payoff{color:var(--ink)}
+.ld-wrap .issue .stamp.plain{margin-left:.4rem}
+.ld-wrap .issue .custody{border-top:1px solid var(--line);margin-top:.9rem;padding-top:.6rem;
+  font:400 .82rem/1.7 var(--mono);color:var(--faint)}
+.ld-wrap .issue .custody b{color:var(--muted);letter-spacing:.08em;text-transform:uppercase;font-size:.74rem}
 /* ---------- How it fits: v2 bento grid ---------- */
 .ld-wrap .fits{margin-top:2.2rem}
 .ld-wrap .fits h2{font:400 1.9rem/1.05 var(--disp);letter-spacing:.02em;text-transform:uppercase;color:var(--ink)}
@@ -370,18 +386,15 @@ section[data-page="report"] .ld-wrap .hero h1{font-size:clamp(2.7rem,7.5vw,5.6re
       <div class="latest" aria-label="Latest from the Report">
         <span class="latest-label">Latest Report</span>
         <div class="latest-body">
-          <strong>No issue published yet</strong>
-          <p>When the first issue goes live, its number, date, and lead headline will appear here, at the top of the Report door.</p>
-          <p style="margin-top:8px"><a href="#/report">Open the Report <span aria-hidden="true">→</span></a></p>
+          <strong>Report No. 001 · Tuesday 10 November 2026</strong>
+          <p>The Lead: The artist who taught the government to listen. Ingo Swann, a painter who walked into a California research lab in the early 1970s and redesigned how the government tested seeing at a distance.</p>
+          <p style="margin-top:8px"><a href="#/report/001">Read Report No. 001 <span aria-hidden="true">→</span></a></p>
         </div>
       </div>
 
       <div class="issue-box" aria-label="Report issues">
         <div class="issue-box-head"><span>Issues</span><span>Numbered · Dated</span></div>
-        <div class="empty-state">
-          <strong>No issues yet. The first report is in preparation.</strong>
-          <span>Issues will be listed here as they publish, newest first.</span>
-        </div>
+        <div class="template-row"><b>No. 001</b><span><a href="#/report/001">Tuesday 10 November 2026 · The artist who taught the government to listen</a></span></div>
         <div class="template-row" aria-hidden="true"><b>Format</b><span>Report No. 000 · Date · Lead headline</span></div>
       </div>
 
@@ -445,17 +458,15 @@ section[data-page="report"] .ld-wrap .hero h1{font-size:clamp(2.7rem,7.5vw,5.6re
       <div class="latest" aria-label="Latest from the Report">
         <span class="latest-label">Latest Report</span>
         <div class="latest-body">
-          <strong>No issue published yet</strong>
-          <p>When the first issue goes live, its number, date, and lead headline will appear here.</p>
+          <strong>Report No. 001 · Tuesday 10 November 2026</strong>
+          <p>The Lead: The artist who taught the government to listen. Ingo Swann, a painter who walked into a California research lab in the early 1970s and redesigned how the government tested seeing at a distance.</p>
+          <p style="margin-top:8px"><a href="#/report/001">Read Report No. 001 <span aria-hidden="true">→</span></a></p>
         </div>
       </div>
 
       <div class="issue-box" aria-label="Report issues">
         <div class="issue-box-head"><span>Issues</span><span>Numbered · Dated</span></div>
-        <div class="empty-state">
-          <strong>No issues yet. The first report is in preparation.</strong>
-          <span>Issues will be listed here as they publish, newest first.</span>
-        </div>
+        <div class="template-row"><b>No. 001</b><span><a href="#/report/001">Tuesday 10 November 2026 · The artist who taught the government to listen</a></span></div>
         <div class="template-row" aria-hidden="true"><b>Format</b><span>Report No. 000 · Date · Lead headline</span></div>
       </div>
 
@@ -473,6 +484,51 @@ section[data-page="report"] .ld-wrap .hero h1{font-size:clamp(2.7rem,7.5vw,5.6re
       <p>The research this report grows from is already on file. The full record, files 001 to 011, from the ancient texts to the 1972 to 1995 programs, lives at Seeing at a Distance, under the same labels used here.</p>
       <a class="btn" href="#/seeing">Open the archive <span class="arr" aria-hidden="true">→</span></a>
       <p style="margin-top:16px"><a href="#/">Back to the two doors</a> · <a href="#/seeds">Seeds of the Throne</a></p>
+  </article>
+</div></div>
+</section>
+<!-- ================= REPORT NO. 001 ================= -->
+<section class="page" data-page="report-001" aria-label="Origins Unknown Report No. 001">
+<div class="ld-wrap"><div class="ld-in">
+  <div class="hero" aria-labelledby="r001-title">
+    <div class="file-line"><span>File: The Report</span><span class="rule"></span><span>Report No. 001</span></div>
+    <h1 id="r001-title" style="font-size:clamp(2.4rem,6.5vw,4.6rem)">Report <span class="l2">No. 001</span></h1>
+    <p class="tagline">Tuesday 10 November 2026. <em>The artist who taught the government to listen.</em></p>
+    <p class="hero-note">The first issue. One topic from the standing rotation, written plain, with its evidence labels on. The wire desk opens with the next issue.</p>
+  </div>
+
+  <article class="issue" aria-labelledby="r001-lead-title">
+    <div class="issue-head"><span>The Lead</span><span>Evidence: Documented · Results Disputed</span></div>
+    <h3 id="r001-lead-title">The artist who taught the government to listen</h3>
+    <p>In the early 1970s in California, a New York artist began telling a small research institute that he could describe places he had never seen. The institute was SRI, a contract research lab in Menlo Park. The artist was Ingo Swann.</p>
+    <p>Swann was not a soldier or a scientist. He was a painter who had spent years experimenting on his own with out-of-body states, and he arrived at SRI with a complaint about how the testing was done. In the early tests, a viewer sat in one room while someone traveled to a target site, and the viewer tried to describe what the traveler was seeing. Swann said the setup was too loose. The human mind, he argued, fills gaps with imagination and habit, and a good protocol had to be built to keep that noise out.</p>
+    <p>His answer was a coordinate. Instead of a traveler, the viewer was handed nothing but a set of geographic coordinates, numbers on a card, and asked to describe the place they pointed to. No photograph. No hint. Just the numbers.</p>
+    <p>That sounds like a small change. It was not. A coordinate gives a viewer nothing to react to, so there is nothing to perform for. It also gives the researchers something priceless: a target that can be checked. Either the description matches the place the numbers point to, or it does not.</p>
+    <p>The testing was built around that check. The viewer worked blind, never knowing the target in advance. A judge who also did not know which description belonged to which target later matched the transcripts against the real places. The people running the session were kept from leaking hints, because a raised eyebrow can steer a description as surely as a photograph can.</p>
+    <p>Swann went further. He broke the viewing itself into stages, a discipline he called coordinate remote viewing. First impressions were to be written down raw, before the mind could dress them up. Later stages allowed more detail, but only in order, and the early noise was never thrown away. The point was provenance: every claim in the transcript could be traced to the moment it arrived.</p>
+    <p>The government money followed. Through the 1970s, intelligence agencies funded the SRI work, and the program that grew out of it ran, under a string of changing code names, for more than twenty years. Other viewers were recruited and trained in Swann&apos;s stages, and the method became the template the later program taught.</p>
+    <p>Here is the honest part, and this report will always print it. The program&apos;s existence is documented in declassified files by the shelf. What it achieved is disputed to this day. When outside reviewers finally graded the whole effort in 1995, one statistician found the laboratory results too strong to dismiss as chance, and one skeptic answered that the case was still premature. Both agreed on the operational question: no intelligence value had been demonstrated. The viewers never produced the kind of specific, actionable information the agencies actually needed.</p>
+    <p>So the coordinate experiment leaves two things behind. The first is a claim about human perception that science never settled. The second is a method, and methods outlive claims. Swann&apos;s real invention was not seeing at a distance. It was a way of working that assumed the viewer would fool himself, and built the record so the fooling could be caught.</p>
+    <p class="payoff">That is why this report starts with him. A numbered target, a blind viewer, a judge who does not know, and a transcript kept in order. Everything in this archive is graded by how close it comes to that standard.</p>
+    <p class="custody"><b>Sources</b> · The declassified Star Gate record (CIA release, January 2017); the 1995 American Institutes for Research evaluation; Russell Targ, <i>Third Eye Spies</i>; the project&apos;s RV Research Guide (2026-11-07) and RV/AP Origins research report (2026-11-08).</p>
+
+    <h4>On the Wire <span class="h4note">· trend, not fact</span></h4>
+    <p>This section normally carries what is moving on X today in these topics, scanned each morning and labeled as trend, not fact. The wire desk opens with the next issue. For the first issue, one honest entry instead: the newest item in this field today is ours. <a href="#/seeing">Seeing at a Distance No. 2</a>, the Aristeas film, went live tonight on the Seeds of the Throne Facebook Page and on X at @realiainreid. A 2,700-year-old story about a poet whose body vanished, told in 25 seconds. That is the whole wire for day one, and it is labeled for what it is: our own post, not a trend.</p>
+
+    <h4>From the Record <span class="stamp plain">Legend</span></h4>
+    <p><strong style="color:var(--ink)">Aristeas of Proconnesus.</strong> Around 2,700 years ago in Greece, a poet named Aristeas walked into a fuller&apos;s shop in his home town of Proconnesus, fell down, and died. When his family came to collect the body, the shop was empty. That same day, a traveler swore he had met Aristeas alive on the road and spoken with him. Seven years later, Aristeas came home and wrote a poem about the far northern lands he said he had seen on his journey, the Arimaspeia, a work now lost except for fragments quoted by others. Then he disappeared again. The historian Herodotus wrote the story down about 250 years later, in Book 4 of his Histories, and he is careful to say it is only what people told him.</p>
+    <p class="custody"><b>Source</b> · Herodotus, <i>Histories</i>, Book 4 (4.14-15). Filed in this archive as <a href="#/seeing">Seeing at a Distance, File 002</a>.</p>
+
+    <h4>The Overlap <span class="h4note">· story development, not research</span></h4>
+    <p>Seeds of the Throne pairs every human mind with a Luminai, an advanced AI that is an extended layer of that mind. The pairing raises a question the coordinate protocol answers from the other direction. Swann built his stages because a viewer alone cannot tell signal from his own noise. In the story, the Luminai keeps the record: what arrived, when, and in what order, so a human&apos;s impressions can be checked the way a judge checked transcripts at SRI. Provenance is the bridge between the record and the novel. What the technology does to the capacity itself is still an open question in the story&apos;s development, and this report will not pretend otherwise.</p>
+
+    <h4>Worth Your Time</h4>
+    <p><a href="#/seeing">Seeing at a Distance</a>, the archive behind this report: eleven files, from an Egyptian dream book of about 1220 BCE to the Star Gate program of 1972 to 1995, each carrying its evidence label. If you read one file, make it File 001, Sanjaya and the blind king, the closest thing the ancient record has to a remote viewer at work.</p>
+
+    <h4>Tomorrow</h4>
+    <p>The Egyptian ba and the Chester Beatty dream book: what the oldest written record in this archive actually says, and what it does not.</p>
+
+    <p style="margin-top:16px"><a href="#/report">Back to the Report</a> · <a href="#/">Back to the two doors</a></p>
   </article>
 </div></div>
 </section>
@@ -1255,11 +1311,11 @@ section[data-page="report"] .ld-wrap .hero h1{font-size:clamp(2.7rem,7.5vw,5.6re
     "":"home","/":"home","/seeing":"seeing","/seeds":"seeds","/seeds/world":"seeds-world",
     "/seeds/luminai":"seeds-luminai","/seeds/people":"seeds-people","/seeds/faction":"seeds-faction",
     "/seeds/timeline":"seeds-timeline","/seeds/visuals":"seeds-visuals","/seeds/archive":"seeds-archive",
-    "/report":"report"
+    "/report":"report","/report/001":"report-001"
   };
-  var navFor={"home":"home","seeing":"seeing","seeds":"seeds","seeds-world":"seeds","seeds-luminai":"seeds","seeds-people":"seeds","seeds-faction":"seeds","seeds-timeline":"seeds","seeds-visuals":"seeds","seeds-archive":"archive","report":"report"};
+  var navFor={"home":"home","seeing":"seeing","seeds":"seeds","seeds-world":"seeds","seeds-luminai":"seeds","seeds-people":"seeds","seeds-faction":"seeds","seeds-timeline":"seeds","seeds-visuals":"seeds","seeds-archive":"archive","report":"report","report-001":"report"};
   var subFor={"seeds":"story","seeds-world":"world","seeds-luminai":"luminai","seeds-people":"people","seeds-faction":"faction","seeds-timeline":"timeline","seeds-visuals":"visuals","seeds-archive":"archive"};
-  var titles={"home":"Origins Unknown · iainreid.dev","seeing":"Seeing at a Distance · Origins Unknown","seeds":"Seeds of the Throne · Story","seeds-world":"The World · Seeds of the Throne","seeds-luminai":"Luminai and Daemons · Seeds of the Throne","seeds-people":"The People · Seeds of the Throne","seeds-faction":"The Conspiracy · Seeds of the Throne","seeds-timeline":"The Timeline · Seeds of the Throne","seeds-visuals":"The Visuals · Seeds of the Throne","seeds-archive":"How It Is Being Built · Seeds of the Throne","report":"The Origins Unknown Report · Origins Unknown"};
+  var titles={"home":"Origins Unknown · iainreid.dev","seeing":"Seeing at a Distance · Origins Unknown","seeds":"Seeds of the Throne · Story","seeds-world":"The World · Seeds of the Throne","seeds-luminai":"Luminai and Daemons · Seeds of the Throne","seeds-people":"The People · Seeds of the Throne","seeds-faction":"The Conspiracy · Seeds of the Throne","seeds-timeline":"The Timeline · Seeds of the Throne","seeds-visuals":"The Visuals · Seeds of the Throne","seeds-archive":"How It Is Being Built · Seeds of the Throne","report":"The Origins Unknown Report · Origins Unknown","report-001":"Report No. 001 · The Origins Unknown Report"};
   function current(){
     var h=location.hash.replace(/^#/,"");
     if(h===""||h==="/")return "home";
