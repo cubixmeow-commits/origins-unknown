@@ -291,6 +291,14 @@ section[data-page="report"] .ld-wrap .hero h1{font-size:clamp(2.7rem,7.5vw,5.6re
 .ld-wrap .issue .custody{border-top:1px solid var(--line);margin-top:.9rem;padding-top:.6rem;
   font:400 .82rem/1.7 var(--mono);color:var(--faint)}
 .ld-wrap .issue .custody b{color:var(--muted);letter-spacing:.08em;text-transform:uppercase;font-size:.74rem}
+/* Report reading view: centered column, reading-app style (Noa, 2026-11-11).
+   Applies to every issue page (report-001, report-002, and future issues);
+   the Report index (data-page="report") and the rest of the site keep the wide grid. */
+section[data-page^="report-"] .ld-wrap{max-width:45rem}
+section[data-page^="report-"] .issue{padding:2rem clamp(1.2rem,4.5vw,2.6rem) 2.2rem}
+section[data-page^="report-"] .issue p{font-size:1.09rem;line-height:1.8;margin:.85rem 0}
+section[data-page^="report-"] .issue h3{font-size:1.85rem}
+section[data-page^="report-"] .issue .custody{font-size:.85rem}
 /* ---------- How it fits: v2 bento grid ---------- */
 .ld-wrap .fits{margin-top:2.2rem}
 .ld-wrap .fits h2{font:400 1.9rem/1.05 var(--disp);letter-spacing:.02em;text-transform:uppercase;color:var(--ink)}
