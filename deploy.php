@@ -25,7 +25,7 @@ $cmds = [
     "chmod 644 /home/iainmcok/public_html/seeds/*.html /home/iainmcok/public_html/origins-unknown/index.html 2>&1",
 ];
 foreach ($cmds as $c) {
-    echo "$ \n";
+    echo '$ ' . $c . "\n";
     echo shell_exec($c) . "\n";
 }
 echo "DEPLOY DONE\n";
