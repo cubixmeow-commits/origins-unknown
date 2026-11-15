@@ -4,3 +4,6 @@ deployment:
     - export DEPLOYPATH=/home/iainmcok/public_html/origins-unknown/
     - /bin/mkdir -p $DEPLOYPATH
     - /bin/cp index.html favicon.svg suggest.php recall-send.php $DEPLOYPATH
+    - export SEEDSPATH=/home/iainmcok/public_html/seeds/
+    - /bin/mkdir -p $SEEDSPATH
+    - /bin/cp seeds/index.html seeds/world.html seeds/luminai.html seeds/people.html seeds/faction.html seeds/timeline.html seeds/visuals.html seeds/archive.html $SEEDSPATH
