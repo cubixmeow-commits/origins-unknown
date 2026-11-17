@@ -168,7 +168,7 @@ if (($_POST['fixmailhost'] ?? '') === '1') {
 }
 
 if (($_POST['syncfile'] ?? '') !== '') {
-    $allowed = ['public/index.php', 'public/assets/js/showcase.js', 'src/Portraits/PortraitService.php', 'src/Sharing/GalleryService.php', 'worker/run-loop.php'];
+    $allowed = ['public/index.php', 'public/assets/js/showcase.js', 'public/assets/js/app.js', 'src/Portraits/PortraitService.php', 'src/Sharing/GalleryService.php', 'worker/run-loop.php'];
     $f = (string) $_POST['syncfile'];
     if (!in_array($f, $allowed, true)) {
         exit("file not in allowlist\n");
