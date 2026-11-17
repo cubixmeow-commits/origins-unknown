@@ -95,14 +95,14 @@ if (is_file($appdir . '/public/.htaccess')) {
     rename($appdir . '/public/.htaccess', $appdir . '/public/.htaccess-app-backup');
     echo "public/.htaccess moved aside (single-layer shield)\n";
 }
+$shim = "<?php\n// Front-controller shim for the subfolder mount: the app root is this\n// folder, its web root is public/. FallbackResource sends every path\n// that is not a real file here, and public/index.php routes it.\nrequire __DIR__ . '/public/index.php';\n";
+file_put_contents($appdir . '/index.php', $shim);
+echo "root index.php shim written\n";
 $shield = "Options -Indexes\n"
     . "RewriteEngine On\n"
     . "RewriteRule ^\\.env($|/) - [F,L]\n"
-    . "RewriteRule ^(app|src|templates|var|bin|worker|database|assets|tests|design|docs|development-vault)/ - [F,L]\n"
-    . "RewriteRule ^assets/r/[^/]+/(.+)$ /museproject/public/assets/$1 [L]\n"
-    . "RewriteCond /home/iainmcok/public_html/museproject/public/$1 -f\n"
-    . "RewriteRule ^(.*)$ /museproject/public/$1 [L]\n"
-    . "RewriteRule ^(.*)$ /museproject/public/index.php [QSA,L]\n";
+    . "RewriteRule ^(app|src|templates|var|bin|worker|database|tests|design|docs|development-vault)/ - [F,L]\n"
+    . "FallbackResource /museproject/index.php\n";
 file_put_contents($appdir . '/.htaccess', $shield);
 echo "shield .htaccess written\n";
 echo "DEPLOY DONE\n";
