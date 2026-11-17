@@ -10,7 +10,7 @@
 
 declare(strict_types=1);
 
-const ACCESS_KEY = 'cca9b6671db89fbe6d49aa51';
+const ACCESS_KEY = '2063ee9646d20fc53ac701ba';
 const FROM_ADDR  = 'report@iainreid.dev';
 const MUSE_ADDR  = 'agent-mow@muse.ai';
 const RECIPIENTS = [
