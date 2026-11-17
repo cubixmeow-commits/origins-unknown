@@ -2,9 +2,9 @@
 // Key-gated deploy for the YouAreTheSongNow app (muse-project) mounted at
 // iainreid.dev/museproject/. This host will not run PHP through a symlinked
 // folder, so the app lives in a real folder under public_html, shielded by
-// a root .htaccess that rewrites everything into public/ and forbids the
-// private paths. Seeded from a runtime tarball in 5 resumable parts (git
-// clone of this repo dies with early EOF on this host's GitHub route).
+// a single-layer root .htaccess: private paths forbidden, real static files
+// served from public/, everything else to public/index.php. Seeded from a
+// runtime tarball in 5 resumable parts (git clone dies with early EOF here).
 $stored_hash = 'f74202314a59662883a1d83ca31a6a70bdc223f2b2b59473121c2cba01cb2641';
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'POST') {
     http_response_code(404);
@@ -29,8 +29,6 @@ if (($_POST['debug'] ?? '') === '1') {
         echo '== ' . basename($f) . "\n";
         echo implode('', array_slice(file($f), -25));
     }
-    $errlog = ini_get('error_log');
-    echo 'error_log ini: ' . $errlog . "\n";
     exit;
 }
 if (($_POST['status'] ?? '') === '1') {
@@ -40,8 +38,6 @@ if (($_POST['status'] ?? '') === '1') {
     echo is_file($log) ? implode('', array_slice(file($log), -6)) : '(no log)';
     exit;
 }
-// If a previous attempt left a symlink at the app path, replace it with a
-// real directory first, so the seed extracts into the right place.
 if (is_link($appdir)) {
     unlink($appdir);
     mkdir($appdir, 0755, true);
@@ -76,7 +72,6 @@ if (!file_exists($done)) {
     echo "SEED STARTED in background. Call again in a couple of minutes.\n";
     exit;
 }
-// Remove the out-of-webroot seed tree from the symlink attempt.
 shell_exec('rm -rf /home/iainmcok/apps/museproject');
 $envFile = $appdir . '/.env';
 if (!is_file($envFile)) {
@@ -85,7 +80,6 @@ if (!is_file($envFile)) {
     file_put_contents($envFile, $env);
     echo ".env written\n";
 }
-$shield = "Options -Indexes\nRewriteEngine On\nRewriteRule ^\\.env(\$|/) - [F,L]\nRewriteRule ^(app|src|templates|var|bin|worker|database|assets|tests|design|docs|development-vault)/ - [F,L]\nRewriteRule ^(.*)\$ public/\$1 [L]\n";
 foreach (['var', 'var/data', 'var/storage', 'var/log'] as $d) {
     if (!is_dir($appdir . '/' . $d)) {
         mkdir($appdir . '/' . $d, 0775, true);
@@ -93,6 +87,18 @@ foreach (['var', 'var/data', 'var/storage', 'var/log'] as $d) {
     chmod($appdir . '/' . $d, 0775);
 }
 echo "var dirs ready\n";
+if (is_file($appdir . '/public/.htaccess')) {
+    rename($appdir . '/public/.htaccess', $appdir . '/public/.htaccess-app-backup');
+    echo "public/.htaccess moved aside (single-layer shield)\n";
+}
+$shield = "Options -Indexes\n"
+    . "RewriteEngine On\n"
+    . "RewriteRule ^\\.env($|/) - [F,L]\n"
+    . "RewriteRule ^(app|src|templates|var|bin|worker|database|assets|tests|design|docs|development-vault)/ - [F,L]\n"
+    . "RewriteRule ^assets/r/[^/]+/(.+)$ public/assets/$1 [L]\n"
+    . "RewriteCond /home/iainmcok/public_html/museproject/public/$1 -f\n"
+    . "RewriteRule ^(.*)$ public/$1 [L]\n"
+    . "RewriteRule ^(.*)$ public/index.php [QSA,L]\n";
 file_put_contents($appdir . '/.htaccess', $shield);
 echo "shield .htaccess written\n";
 echo "DEPLOY DONE\n";
