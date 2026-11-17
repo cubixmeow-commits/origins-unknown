@@ -31,7 +31,7 @@ if (($_POST['syncfile'] ?? '') !== '') {
     if (!in_array($f, $allowed, true)) {
         exit("file not in allowlist\n");
     }
-    $data = @file_get_contents(AMT_RAW . $f);
+    $data = @file_get_contents(AMT_RAW . $f . '?v=' . time());
     if ($data === false || $data === '') {
         exit("sync failed: could not fetch $f\n");
     }
