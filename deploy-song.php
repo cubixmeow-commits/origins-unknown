@@ -30,7 +30,9 @@ if (($_POST['status'] ?? '') === '1') {
 }
 if (!file_exists($done)) {
     $logAge = is_file($log) ? time() - filemtime($log) : null;
-    if ($logAge !== null && $logAge < 1800) {
+    $logText = is_file($log) ? (string) file_get_contents($log) : '';
+    $seedDied = str_contains($logText, 'curl:') || str_contains($logText, 'sha256sum:');
+    if ($logAge !== null && $logAge < 1800 && !$seedDied) {
         echo "SEED IN PROGRESS (log age {$logAge}s). Call again in a bit.\n";
         exit;
     }
@@ -43,7 +45,7 @@ if (!file_exists($done)) {
     ];
     $dl = '';
     foreach ($parts as $i => $u) {
-        $dl .= 'curl -L -C - --retry 30 --retry-all-errors --retry-delay 3 -o /home/iainmcok/apps/mp-part-' . $i . '.bin ' . escapeshellarg($u) . ' || exit 1; ';
+        $dl .= 'curl -L -C - --retry 30 --retry-delay 3 -o /home/iainmcok/apps/mp-part-' . $i . '.bin ' . escapeshellarg($u) . ' || exit 1; ';
     }
     $inner = 'mkdir -p ' . $appdir . ' && cd /home/iainmcok/apps && ' . $dl
         . 'cat mp-part-0.bin mp-part-1.bin mp-part-2.bin mp-part-3.bin mp-part-4.bin > mp-runtime.tar.gz && '
