@@ -39,7 +39,8 @@ if (!file_exists($done)) {
     $logAge = is_file($log) ? time() - filemtime($log) : null;
     $logText = is_file($log) ? (string) file_get_contents($log) : '';
     $seedDied = str_contains($logText, 'curl:') || str_contains($logText, 'sha256sum:');
-    if ($logAge !== null && $logAge < 1800 && !$seedDied) {
+    $seedFinished = str_contains($logText, 'SEED COMPLETE');
+    if ($logAge !== null && $logAge < 1800 && !$seedDied && !$seedFinished) {
         echo "SEED IN PROGRESS (log age {$logAge}s). Call again in a bit.\n";
         exit;
     }
