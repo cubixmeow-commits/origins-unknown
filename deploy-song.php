@@ -260,6 +260,30 @@ if (($_POST['setflags'] ?? '') !== '') {
     exit;
 }
 
+if (($_POST['imageprobe'] ?? '') !== '') {
+    try {
+        require $appdir . '/app/bootstrap.php';
+        $pid = (string) $_POST['imageprobe'];
+        $row = \Yatsn\Support\Database::one('SELECT public_id, storage_key, display_key, thumb_key, mime_type, orientation, width, height, created_at FROM generated_images WHERE public_id = :pid', ['pid' => $pid]);
+        if ($row === null) {
+            echo "image row: NOT FOUND\n";
+        } else {
+            echo 'image row: ' . json_encode($row) . "\n";
+            foreach (['storage_key', 'display_key', 'thumb_key'] as $k) {
+                $key = (string) ($row[$k] ?? '');
+                echo $k . ': ' . $key . ' exists=' . ($key !== '' && \Yatsn\Storage\LocalStorage::exists($key) ? 'yes' : 'no') . "\n";
+            }
+        }
+        $recent = \Yatsn\Support\Database::all('SELECT public_id, orientation, created_at FROM generated_images ORDER BY id DESC LIMIT 5');
+        foreach ($recent as $r) {
+            echo 'recent: ' . $r['public_id'] . ' ' . $r['orientation'] . ' ' . $r['created_at'] . "\n";
+        }
+    } catch (Throwable $e) {
+        echo 'imageprobe error: ' . $e->getMessage() . "\n";
+    }
+    exit;
+}
+
 if (($_POST['lyricstest'] ?? '') === '1') {
     try {
         require $appdir . '/app/bootstrap.php';
