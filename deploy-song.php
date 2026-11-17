@@ -35,6 +35,17 @@ if (($_POST['debug'] ?? '') === '1') {
     }
     exit;
 }
+if (($_POST['syncfile'] ?? '') !== '') {
+    $allowed = ['public/index.php'];
+    $f = (string) $_POST['syncfile'];
+    if (!in_array($f, $allowed, true)) {
+        exit("file not in allowlist\n");
+    }
+    $url = 'https://raw.githubusercontent.com/cubixmeow-commits/muse-project/main/' . $f;
+    $code = shell_exec('curl -sS -L --retry 5 --retry-delay 2 -o ' . escapeshellarg($appdir . '/' . $f . '.tmp') . ' ' . escapeshellarg($url) . ' && mv ' . escapeshellarg($appdir . '/' . $f . '.tmp') . ' ' . escapeshellarg($appdir . '/' . $f) . ' && echo SYNCED');
+    echo $code ?: "sync failed\n";
+    exit;
+}
 if (($_POST['status'] ?? '') === '1') {
     echo 'seed_done: ' . (file_exists($done) ? 'yes' : 'no') . "\n";
     echo 'app_dir: ' . (is_dir($appdir) ? 'exists' : 'missing') . "\n";
