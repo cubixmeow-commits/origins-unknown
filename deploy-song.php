@@ -205,6 +205,20 @@ if (($_POST['mergenv'] ?? '') === '1') {
     exit;
 }
 
+if (($_POST['setproviders'] ?? '') !== '') {
+    $val = ($_POST['setproviders'] === '1') ? 'true' : 'false';
+    $envFile = $appdir . '/.env';
+    $env = (string) file_get_contents($envFile);
+    if (preg_match('/^AI_PROVIDERS_ENABLED=/m', $env)) {
+        $env = preg_replace('/^AI_PROVIDERS_ENABLED=.*$/m', 'AI_PROVIDERS_ENABLED=' . $val, $env);
+    } else {
+        $env .= 'AI_PROVIDERS_ENABLED=' . $val . "\n";
+    }
+    file_put_contents($envFile, $env);
+    echo 'AI_PROVIDERS_ENABLED=' . $val . "\n";
+    exit;
+}
+
 if (($_POST['syncfile'] ?? '') !== '') {
     $allowed = ['public/index.php', 'public/assets/js/showcase.js', 'public/assets/js/app.js', 'src/Portraits/PortraitService.php', 'src/Sharing/GalleryService.php', 'worker/run-loop.php', 'src/Auth/AuthService.php', 'src/Auth/AccountService.php', 'src/Api/ApiV1.php', 'templates/pages/account.php', 'templates/pages/sign-in.php'];
     $f = (string) $_POST['syncfile'];
