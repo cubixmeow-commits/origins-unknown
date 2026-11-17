@@ -119,7 +119,7 @@ if (($_POST['debug'] ?? '') === '1') {
     exit;
 }
 if (($_POST['syncfile'] ?? '') !== '') {
-    $allowed = ['public/index.php', 'public/assets/js/showcase.js', 'src/Portraits/PortraitService.php', 'src/Sharing/GalleryService.php'];
+    $allowed = ['public/index.php', 'public/assets/js/showcase.js', 'src/Portraits/PortraitService.php', 'src/Sharing/GalleryService.php', 'worker/run-loop.php'];
     $f = (string) $_POST['syncfile'];
     if (!in_array($f, $allowed, true)) {
         exit("file not in allowlist\n");
