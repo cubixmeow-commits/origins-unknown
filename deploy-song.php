@@ -219,6 +219,34 @@ if (($_POST['setproviders'] ?? '') !== '') {
     exit;
 }
 
+if (($_POST['setflags'] ?? '') !== '') {
+    // Flip allowlisted feature flags in the app .env (values: true/false).
+    $allow = ['AI_PROVIDERS_ENABLED', 'GEMINI_LIVE_CALLS', 'DEVELOPMENT_GEMINI_LYRICS_SEARCH', 'GROQ_LIVE_CALLS', 'GEMINI_IMAGE_LIVE_CALLS', 'FAL_LIVE_CALLS', 'REPLICATE_LIVE_CALLS'];
+    $envFile = $appdir . '/.env';
+    $env = (string) file_get_contents($envFile);
+    foreach (explode(',', (string) $_POST['setflags']) as $pair) {
+        $pair = trim($pair);
+        if (!str_contains($pair, '=')) {
+            continue;
+        }
+        [$k, $v] = explode('=', $pair, 2);
+        $k = trim($k);
+        $v = trim($v) === 'true' ? 'true' : 'false';
+        if (!in_array($k, $allow, true)) {
+            echo "skipped $k (not allowlisted)\n";
+            continue;
+        }
+        if (preg_match('/^' . preg_quote($k, '/') . '=/m', $env)) {
+            $env = preg_replace('/^' . preg_quote($k, '/') . '=.*$/m', $k . '=' . $v, $env);
+        } else {
+            $env .= $k . '=' . $v . "\n";
+        }
+        echo "$k=$v\n";
+    }
+    file_put_contents($envFile, $env);
+    exit;
+}
+
 if (($_POST['syncfile'] ?? '') !== '') {
     $allowed = ['public/index.php', 'public/assets/js/showcase.js', 'public/assets/js/app.js', 'src/Portraits/PortraitService.php', 'src/Sharing/GalleryService.php', 'worker/run-loop.php', 'src/Auth/AuthService.php', 'src/Auth/AccountService.php', 'src/Api/ApiV1.php', 'templates/pages/account.php', 'templates/pages/sign-in.php'];
     $f = (string) $_POST['syncfile'];
