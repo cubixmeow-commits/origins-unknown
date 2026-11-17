@@ -4,7 +4,7 @@
 // malware scanner quarantines scripts that shell out to curl/git/nohup,
 // so everything here (downloads, extraction, seeding) is PHP-native.
 // Actions (POST, key required): status, debug, syncfile, setup form.
-$stored_hash = 'f74202314a59662883a1d83ca31a6a70bdc223f2b2b59473121c2cba01cb2641';
+$stored_hash = 'fdeff6c8c0fbda176d1028222a2978cf25fd190935d5ee08630767421b0bf39d';
 $appdir = '/home/iainmcok/public_html/museproject';
 $appUrl = 'https://iainreid.dev/museproject';
 

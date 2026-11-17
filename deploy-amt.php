@@ -4,7 +4,7 @@
 // The server stores only the SHA-256 hash of the deploy key.
 declare(strict_types=1);
 
-const AMT_KEY_HASH = '3a221d32b76d1017fa11c4f8547915ff176d19d1c8398cf332a397ae621c43b2';
+const AMT_KEY_HASH = 'e683c7105d29cbaee581384f9afaeb094e178181c44efed132ea148558f61c5a';
 const AMT_DIR = '/home/iainmcok/public_html/amt';
 const AMT_RAW = 'https://raw.githubusercontent.com/cubixmeow-commits/agent-mow-toolkit/main/amt/';
 
@@ -140,6 +140,37 @@ if (($_POST['showbootstrap'] ?? '') === '1') {
         }
     }
     echo "not set\n";
+    exit;
+}
+
+if (($_POST['rotateenv'] ?? '') === '1') {
+    $envFile = AMT_DIR . '/.env';
+    if (!is_file($envFile)) {
+        exit("env missing\n");
+    }
+    $fresh = [
+        'BOOTSTRAP_KEY' => bin2hex(random_bytes(24)),
+        'CLAIM_A_TOKEN' => bin2hex(random_bytes(16)),
+        'CLAIM_B_TOKEN' => bin2hex(random_bytes(16)),
+    ];
+    $lines = file($envFile, FILE_IGNORE_NEW_LINES);
+    $seen = [];
+    foreach ($lines as $i => $line) {
+        foreach ($fresh as $name => $value) {
+            if (str_starts_with($line, $name . '=')) {
+                $lines[$i] = $name . '=' . $value;
+                $seen[$name] = true;
+            }
+        }
+    }
+    foreach ($fresh as $name => $value) {
+        if (empty($seen[$name])) {
+            $lines[] = $name . '=' . $value;
+        }
+    }
+    file_put_contents($envFile, implode("\n", $lines) . "\n");
+    header('Content-Type: application/json');
+    echo json_encode($fresh) . "\n";
     exit;
 }
 
