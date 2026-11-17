@@ -284,7 +284,7 @@ if (($_POST['lyricstest'] ?? '') === '1') {
 }
 
 if (($_POST['syncfile'] ?? '') !== '') {
-    $allowed = ['public/index.php', 'public/assets/js/showcase.js', 'public/assets/js/app.js', 'src/Portraits/PortraitService.php', 'src/Sharing/GalleryService.php', 'worker/run-loop.php', 'src/Auth/AuthService.php', 'src/Auth/AccountService.php', 'src/Api/ApiV1.php', 'templates/pages/account.php', 'templates/pages/sign-in.php'];
+    $allowed = ['public/index.php', 'public/assets/js/showcase.js', 'public/assets/js/app.js', 'src/Portraits/PortraitService.php', 'src/Sharing/GalleryService.php', 'worker/run-loop.php', 'src/Auth/AuthService.php', 'src/Auth/AccountService.php', 'src/Api/ApiV1.php', 'templates/pages/account.php', 'templates/pages/sign-in.php', 'templates/layouts/main.php', 'app/bootstrap.php'];
     $f = (string) $_POST['syncfile'];
     if (!in_array($f, $allowed, true)) {
         exit("file not in allowlist\n");
