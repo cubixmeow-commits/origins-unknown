@@ -122,6 +122,32 @@ if (($_POST['debug'] ?? '') === '1') {
     exit;
 }
 
+if (($_POST['mailtest'] ?? '') === '1') {
+    $targets = [
+        ['mail.iainreid.dev', 465, true],
+        ['server365.web-hosting.com', 465, true],
+        ['mail.iainreid.dev', 587, false],
+        ['server365.web-hosting.com', 587, false],
+        ['localhost', 465, true],
+        ['localhost', 25, false],
+    ];
+    foreach ($targets as [$h, $p, $ssl]) {
+        $remote = ($ssl ? 'ssl://' : '') . $h . ':' . $p;
+        $errno = 0;
+        $errstr = '';
+        $fp = @stream_socket_client($remote, $errno, $errstr, 8, STREAM_CLIENT_CONNECT);
+        if ($fp === false) {
+            echo "$remote -> FAIL ($errno) $errstr\n";
+            continue;
+        }
+        stream_set_timeout($fp, 8);
+        $greet = fgets($fp, 512);
+        echo "$remote -> OK greeting: " . trim((string) $greet) . "\n";
+        fclose($fp);
+    }
+    exit;
+}
+
 if (($_POST['syncfile'] ?? '') !== '') {
     $allowed = ['public/index.php', 'public/assets/js/showcase.js', 'src/Portraits/PortraitService.php', 'src/Sharing/GalleryService.php', 'worker/run-loop.php'];
     $f = (string) $_POST['syncfile'];
