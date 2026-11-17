@@ -95,10 +95,10 @@ $shield = "Options -Indexes\n"
     . "RewriteEngine On\n"
     . "RewriteRule ^\\.env($|/) - [F,L]\n"
     . "RewriteRule ^(app|src|templates|var|bin|worker|database|assets|tests|design|docs|development-vault)/ - [F,L]\n"
-    . "RewriteRule ^assets/r/[^/]+/(.+)$ public/assets/$1 [L]\n"
+    . "RewriteRule ^assets/r/[^/]+/(.+)$ /museproject/public/assets/$1 [L]\n"
     . "RewriteCond /home/iainmcok/public_html/museproject/public/$1 -f\n"
-    . "RewriteRule ^(.*)$ public/$1 [L]\n"
-    . "RewriteRule ^(.*)$ public/index.php [QSA,L]\n";
+    . "RewriteRule ^(.*)$ /museproject/public/$1 [L]\n"
+    . "RewriteRule ^(.*)$ /museproject/public/index.php [QSA,L]\n";
 file_put_contents($appdir . '/.htaccess', $shield);
 echo "shield .htaccess written\n";
 echo "DEPLOY DONE\n";
