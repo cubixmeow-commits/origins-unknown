@@ -30,14 +30,17 @@ if (($_POST['status'] ?? '') === '1') {
 $done = $repo . '/.clone-done';
 if (!file_exists($done)) {
     $logAge = is_file($log) ? time() - filemtime($log) : null;
-    if (is_dir($repo) && $logAge !== null && $logAge < 1800) {
+    $logTail = is_file($log) ? (string) file_get_contents($log) : '';
+    $cloneDied = str_contains($logTail, 'fatal:');
+    if (is_dir($repo) && $logAge !== null && $logAge < 1800 && !$cloneDied) {
         echo "CLONE IN PROGRESS (log age {$logAge}s). Call again in a bit.\n";
         exit;
     }
     if (is_dir($repo)) {
         shell_exec('rm -rf ' . $repo);
     }
-    $cmd = 'nohup bash -c ' . escapeshellarg('git clone --depth 1 https://github.com/cubixmeow-commits/muse-project.git ' . $repo . ' && touch ' . $done) . ' > ' . $log . ' 2>&1 &';
+    $inner = 'for i in 1 2 3 4 5; do rm -rf ' . $repo . '; if git -c http.version=HTTP/1.1 clone --depth 1 --single-branch https://github.com/cubixmeow-commits/muse-project.git ' . $repo . '; then touch ' . $done . '; break; fi; echo "attempt $i failed, retrying"; sleep 5; done';
+    $cmd = 'nohup bash -c ' . escapeshellarg($inner) . ' > ' . $log . ' 2>&1 &';
     shell_exec($cmd);
     echo "CLONE STARTED in background. Call again in a couple of minutes.\n";
     exit;
