@@ -31,7 +31,19 @@ if (($_POST['syncfile'] ?? '') !== '') {
     if (!in_array($f, $allowed, true)) {
         exit("file not in allowlist\n");
     }
-    $data = @file_get_contents(AMT_RAW . $f . '?v=' . time());
+    // Fetch at the branch's current commit SHA: SHA-pinned raw URLs are immutable,
+    // so a cached copy is always the right copy (branch URLs served stale content here).
+    $ctx = stream_context_create(['http' => ['header' => "User-Agent: deploy-amt\r\n", 'timeout' => 20]]);
+    $sha = '';
+    $meta = @file_get_contents('https://api.github.com/repos/cubixmeow-commits/agent-mow-toolkit/commits/main', false, $ctx);
+    if ($meta !== false) {
+        $decoded = json_decode($meta, true);
+        $sha = (string) ($decoded['sha'] ?? '');
+    }
+    $url = $sha !== ''
+        ? 'https://raw.githubusercontent.com/cubixmeow-commits/agent-mow-toolkit/' . $sha . '/amt/' . $f
+        : AMT_RAW . $f . '?v=' . time();
+    $data = @file_get_contents($url, false, $ctx);
     if ($data === false || $data === '') {
         exit("sync failed: could not fetch $f\n");
     }
