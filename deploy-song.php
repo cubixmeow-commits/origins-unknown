@@ -19,9 +19,9 @@ $repo = '/home/iainmcok/repositories/muse-project';
 $webroot = '/home/iainmcok/public_html/museproject';
 $appUrl = 'https://iainreid.dev/museproject';
 if (!is_dir($repo . '/.git')) {
-    echo shell_exec('git clone https://github.com/cubixmeow-commits/muse-project.git ' . $repo . ' 2>&1') . "\n";
+    echo shell_exec('git clone --depth 1 https://github.com/cubixmeow-commits/muse-project.git ' . $repo . ' 2>&1') . "\n";
 } else {
-    echo shell_exec("cd $repo && git fetch origin 2>&1") . "\n";
+    echo shell_exec("cd $repo && git fetch --depth 1 origin main 2>&1") . "\n";
     echo shell_exec("cd $repo && git reset --hard origin/main 2>&1") . "\n";
 }
 echo shell_exec("cd $repo && git log --oneline -1 2>&1") . "\n";
