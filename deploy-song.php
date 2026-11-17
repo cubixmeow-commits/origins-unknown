@@ -19,7 +19,7 @@ header('Content-Type: text/plain');
 $appdir = '/home/iainmcok/apps/museproject';
 $webroot = '/home/iainmcok/public_html/museproject';
 $appUrl = 'https://iainreid.dev/museproject';
-$log = '/home/iainmcok/apps/museproject-seed.log';
+$log = '/home/iainmcok/museproject-seed.log';
 $done = $appdir . '/.seed-done';
 if (($_POST['status'] ?? '') === '1') {
     echo 'seed_done: ' . (file_exists($done) ? 'yes' : 'no') . "\n";
