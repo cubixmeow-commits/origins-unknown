@@ -6,6 +6,89 @@
 // served from public/, everything else to public/index.php. Seeded from a
 // runtime tarball in 5 resumable parts (git clone dies with early EOF here).
 $stored_hash = 'f74202314a59662883a1d83ca31a6a70bdc223f2b2b59473121c2cba01cb2641';
+// Key-gated setup form: Noa enters the hello@ mailbox password and his
+// owner login here; they are written straight into the app .env on the
+// server and never pass through chat. GET ?setup=KEY shows the form.
+if ((($_GET['setup'] ?? '') !== '' || ($_POST['setup_save'] ?? '') === '1')) {
+    $given = (string) ($_GET['setup'] ?? ($_POST['key'] ?? ''));
+    if (!hash_equals($stored_hash, hash('sha256', $given))) {
+        http_response_code(404);
+        exit('Not found.');
+    }
+    $appdirSetup = '/home/iainmcok/public_html/museproject';
+    if (($_POST['setup_save'] ?? '') === '1') {
+        header('Content-Type: text/plain');
+        if (($_POST['website'] ?? '') !== '') {
+            exit("Discarded.\n");
+        }
+        $envFile = $appdirSetup . '/.env';
+        $lines = is_file($envFile) ? file($envFile, FILE_IGNORE_NEW_LINES) : [];
+        $set = function (string $k, string $v) use (&$lines): void {
+            $found = false;
+            foreach ($lines as $i => $line) {
+                if (str_starts_with($line, $k . '=')) {
+                    $lines[$i] = $k . '=' . $v;
+                    $found = true;
+                }
+            }
+            if (!$found) {
+                $lines[] = $k . '=' . $v;
+            }
+        };
+        $mailPass = trim((string) ($_POST['mail_password'] ?? ''));
+        $ownerEmail = trim((string) ($_POST['owner_email'] ?? ''));
+        $ownerPass = (string) ($_POST['owner_password'] ?? '');
+        if ($mailPass !== '') {
+            $set('MAIL_TRANSPORT', 'smtp');
+            $set('MAIL_HOST', 'mail.iainreid.dev');
+            $set('MAIL_PORT', '465');
+            $set('MAIL_ENCRYPTION', 'ssl');
+            $set('MAIL_USERNAME', 'hello@iainreid.dev');
+            $set('MAIL_PASSWORD', $mailPass);
+            $set('MAIL_FROM_ADDRESS', 'hello@iainreid.dev');
+            $set('MAIL_FROM_NAME', 'You Are The Song Now');
+            echo "mail settings saved (SMTP, hello@iainreid.dev)\n";
+        }
+        if ($ownerEmail !== '' && $ownerPass !== '') {
+            $set('OWNER_EMAIL', $ownerEmail);
+            $set('OWNER_PASSWORD', $ownerPass);
+            echo "owner credentials saved\n";
+        }
+        file_put_contents($envFile, implode("\n", $lines) . "\n");
+        if ($ownerEmail !== '' && $ownerPass !== '') {
+            $out = shell_exec('cd ' . escapeshellarg($appdirSetup) . ' && php bin/console.php seed-owner 2>&1');
+            echo 'seed-owner: ' . trim((string) $out) . "\n";
+        }
+        if (($_POST['send_test'] ?? '') === '1' && $ownerEmail !== '') {
+            try {
+                require $appdirSetup . '/app/bootstrap.php';
+                $ok = \Yatsn\Mail\Mailer::send($ownerEmail, 'You Are The Song Now: mail is working', "This is a test email from your app at iainreid.dev/museproject.\nSMTP sending from hello@iainreid.dev is configured.\n");
+                echo 'test email: ' . ($ok ? 'sent to ' . $ownerEmail : 'FAILED, check the mailbox exists and the password matches') . "\n";
+            } catch (Throwable $e) {
+                echo 'test email error: ' . $e->getMessage() . "\n";
+            }
+        }
+        echo "SETUP DONE\n";
+        exit;
+    }
+    header('Content-Type: text/html; charset=utf-8');
+    $keyEsc = htmlspecialchars($given, ENT_QUOTES);
+    echo '<!doctype html><meta name="viewport" content="width=device-width, initial-scale=1"><title>Song app setup</title>';
+    echo '<body style="font-family:system-ui;max-width:34rem;margin:2rem auto;padding:0 1rem;background:#0b0f1c;color:#eef0f8">';
+    echo '<h1 style="font-size:1.3rem">You Are The Song Now: mail and owner setup</h1>';
+    echo '<p>First create the mailbox <b>hello@iainreid.dev</b> in cPanel (Email Accounts) and set its password. Then enter that same password here, plus the email and password you want for your owner login. Values go straight into the server config.</p>';
+    echo '<form method="post" action="">';
+    echo '<input type="hidden" name="key" value="' . $keyEsc . '">';
+    echo '<input type="hidden" name="setup_save" value="1">';
+    echo '<p style="display:none"><label>Website <input name="website" autocomplete="off"></label></p>';
+    echo '<p><label>hello@ mailbox password<br><input type="password" name="mail_password" style="width:100%;padding:.5rem"></label></p>';
+    echo '<p><label>Your owner email<br><input type="email" name="owner_email" style="width:100%;padding:.5rem"></label></p>';
+    echo '<p><label>Your owner password<br><input type="password" name="owner_password" style="width:100%;padding:.5rem"></label></p>';
+    echo '<p><label><input type="checkbox" name="send_test" value="1" checked> Send me a test email after saving</label></p>';
+    echo '<p><button type="submit" style="padding:.6rem 1.2rem">Save and seed owner</button></p>';
+    echo '</form></body>';
+    exit;
+}
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'POST') {
     http_response_code(404);
     exit('Not found.');
