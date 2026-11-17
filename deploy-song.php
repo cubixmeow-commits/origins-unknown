@@ -19,6 +19,14 @@ $repo = '/home/iainmcok/repositories/muse-project';
 $webroot = '/home/iainmcok/public_html/museproject';
 $appUrl = 'https://iainreid.dev/museproject';
 $log = '/home/iainmcok/repositories/muse-project-clone.log';
+if (($_POST['status'] ?? '') === '1') {
+    echo 'clone_done: ' . (file_exists($repo . '/.clone-done') ? 'yes' : 'no') . "\n";
+    echo 'repo_dir: ' . (is_dir($repo) ? 'exists' : 'missing') . "\n";
+    echo 'git_dir: ' . (is_dir($repo . '/.git') ? 'exists' : 'missing') . "\n";
+    echo 'log_tail:' . "\n";
+    echo is_file($log) ? implode('', array_slice(file($log), -15)) : '(no log)';
+    exit;
+}
 $done = $repo . '/.clone-done';
 if (!file_exists($done)) {
     $logAge = is_file($log) ? time() - filemtime($log) : null;
