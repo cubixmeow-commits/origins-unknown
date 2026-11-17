@@ -295,8 +295,13 @@ if (($_POST['syncfile'] ?? '') !== '') {
     if ($data === false || $data === '') {
         exit("sync failed: could not fetch $f\n");
     }
-    file_put_contents($tmp, $data);
-    rename($tmp, $appdir . '/' . $f);
+    $dir = dirname($appdir . '/' . $f);
+    if (!is_dir($dir)) {
+        mkdir($dir, 0775, true);
+    }
+    if (file_put_contents($tmp, $data) === false || !rename($tmp, $appdir . '/' . $f)) {
+        exit("sync failed: could not write $f\n");
+    }
     echo "SYNCED $f (" . strlen($data) . " bytes)\n";
     exit;
 }
