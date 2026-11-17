@@ -1,9 +1,10 @@
 <?php
 // Key-gated deploy for the YouAreTheSongNow app (muse-project) mounted at
-// iainreid.dev/museproject/. The repo pack is too large for this server's
-// GitHub connection (git clone dies with early EOF), so the app is seeded
-// from a runtime tarball in 5 parts, each downloaded with curl resume.
-// Call once to start the detached seed, again to finish. Anything else 404s.
+// iainreid.dev/museproject/. This host will not run PHP through a symlinked
+// folder, so the app lives in a real folder under public_html, shielded by
+// a root .htaccess that rewrites everything into public/ and forbids the
+// private paths. Seeded from a runtime tarball in 5 resumable parts (git
+// clone of this repo dies with early EOF on this host's GitHub route).
 $stored_hash = 'f74202314a59662883a1d83ca31a6a70bdc223f2b2b59473121c2cba01cb2641';
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'POST') {
     http_response_code(404);
@@ -16,8 +17,7 @@ if (!hash_equals($stored_hash, hash('sha256', (string)$key))) {
 }
 set_time_limit(120);
 header('Content-Type: text/plain');
-$appdir = '/home/iainmcok/apps/museproject';
-$webroot = '/home/iainmcok/public_html/museproject';
+$appdir = '/home/iainmcok/public_html/museproject';
 $appUrl = 'https://iainreid.dev/museproject';
 $log = '/home/iainmcok/museproject-seed.log';
 $done = $appdir . '/.seed-done';
@@ -25,8 +25,15 @@ if (($_POST['status'] ?? '') === '1') {
     echo 'seed_done: ' . (file_exists($done) ? 'yes' : 'no') . "\n";
     echo 'app_dir: ' . (is_dir($appdir) ? 'exists' : 'missing') . "\n";
     echo 'log_tail:' . "\n";
-    echo is_file($log) ? implode('', array_slice(file($log), -15)) : '(no log)';
+    echo is_file($log) ? implode('', array_slice(file($log), -6)) : '(no log)';
     exit;
+}
+// If a previous attempt left a symlink at the app path, replace it with a
+// real directory first, so the seed extracts into the right place.
+if (is_link($appdir)) {
+    unlink($appdir);
+    mkdir($appdir, 0755, true);
+    echo "replaced symlink with real directory\n";
 }
 if (!file_exists($done)) {
     $logAge = is_file($log) ? time() - filemtime($log) : null;
@@ -45,9 +52,9 @@ if (!file_exists($done)) {
     ];
     $dl = '';
     foreach ($parts as $i => $u) {
-        $dl .= 'curl -L -C - --retry 30 --retry-delay 3 -o /home/iainmcok/apps/mp-part-' . $i . '.bin ' . escapeshellarg($u) . ' || exit 1; ';
+        $dl .= 'curl -sS -L -C - --retry 30 --retry-delay 3 -o /home/iainmcok/apps/mp-part-' . $i . '.bin ' . escapeshellarg($u) . ' || exit 1; ';
     }
-    $inner = 'mkdir -p ' . $appdir . ' && cd /home/iainmcok/apps && ' . $dl
+    $inner = 'mkdir -p /home/iainmcok/apps && mkdir -p ' . $appdir . ' && cd /home/iainmcok/apps && ' . $dl
         . 'cat mp-part-0.bin mp-part-1.bin mp-part-2.bin mp-part-3.bin mp-part-4.bin > mp-runtime.tar.gz && '
         . 'echo "b69e1557743b0ae8f2b40386f5beb6fcd6c01ff34a169d466510cca46c5894cd  mp-runtime.tar.gz" | sha256sum -c - && '
         . 'tar -xzf mp-runtime.tar.gz -C ' . $appdir . ' && touch ' . $done . ' && echo SEED COMPLETE';
@@ -56,35 +63,16 @@ if (!file_exists($done)) {
     echo "SEED STARTED in background. Call again in a couple of minutes.\n";
     exit;
 }
+// Remove the out-of-webroot seed tree from the symlink attempt.
+shell_exec('rm -rf /home/iainmcok/apps/museproject');
 $envFile = $appdir . '/.env';
 if (!is_file($envFile)) {
     $appKey = bin2hex(random_bytes(32));
     $env = "APP_ENV=development\nAPP_DEBUG=false\nAPP_URL=$appUrl\nAPP_KEY=$appKey\nAPP_TIMEZONE=America/Los_Angeles\nDATABASE_PATH=var/data/yatsn.sqlite\nPRIVATE_STORAGE_PATH=var/storage\nLOG_PATH=var/log\nALLOW_EXTERNAL_USERS=false\nALLOW_PUBLIC_REGISTRATION=false\nALLOW_LIVE_PAYMENTS=false\nALLOW_PROTECTED_LYRICS_COMMERCIAL_USE=false\nAI_PROVIDERS_ENABLED=false\nSTRIPE_MODE=test\nMAIL_TRANSPORT=log\n";
     file_put_contents($envFile, $env);
     echo ".env written\n";
-} else {
-    $env = (string) file_get_contents($envFile);
-    $fixed = preg_replace('#^APP_URL=.*$#m', 'APP_URL=' . $appUrl, $env);
-    if ($fixed !== $env) {
-        file_put_contents($envFile, $fixed);
-        echo ".env APP_URL updated to $appUrl\n";
-    } else {
-        echo ".env already present, APP_URL correct\n";
-    }
 }
-$oldLink = '/home/iainmcok/public_html/song';
-if (is_link($oldLink)) {
-    unlink($oldLink);
-    echo "removed earlier /song symlink\n";
-}
-if (is_link($webroot)) {
-    unlink($webroot);
-}
-if (!file_exists($webroot)) {
-    symlink($appdir . '/public', $webroot);
-    echo "symlink created: $webroot -> $appdir/public\n";
-} elseif (is_dir($webroot)) {
-    echo "WARNING: $webroot exists as a real directory, symlink not created\n";
-}
-echo 'readlink: ' . (readlink($webroot) ?: 'n/a') . "\n";
+$shield = "Options -Indexes\nRewriteEngine On\nRewriteRule ^\\.env(\$|/) - [F,L]\nRewriteRule ^(app|src|templates|var|bin|worker|database|assets|tests|design|docs|development-vault)/ - [F,L]\nRewriteRule ^(.*)\$ public/\$1 [L]\n";
+file_put_contents($appdir . '/.htaccess', $shield);
+echo "shield .htaccess written\n";
 echo "DEPLOY DONE\n";
