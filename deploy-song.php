@@ -102,7 +102,9 @@ $shield = "Options -Indexes\n"
     . "RewriteEngine On\n"
     . "RewriteRule ^\\.env($|/) - [F,L]\n"
     . "RewriteRule ^(app|src|templates|var|bin|worker|database|tests|design|docs|development-vault)/ - [F,L]\n"
-    . "FallbackResource /museproject/index.php\n";
+    . "RewriteCond %{REQUEST_FILENAME} !-f\n"
+    . "RewriteCond %{REQUEST_FILENAME} !-d\n"
+    . "RewriteRule ^(.*)$ index.php [QSA,L]\n";
 file_put_contents($appdir . '/.htaccess', $shield);
 echo "shield .htaccess written\n";
 echo "DEPLOY DONE\n";
