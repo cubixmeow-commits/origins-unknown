@@ -247,6 +247,26 @@ if (($_POST['setflags'] ?? '') !== '') {
     exit;
 }
 
+if (($_POST['lyricstest'] ?? '') === '1') {
+    try {
+        require $appdir . '/app/bootstrap.php';
+        $rows = \Yatsn\Support\Database::all('SELECT artist_text, title_text, state, classification, analysis_provider, (derived_analysis_json IS NOT NULL) AS has_analysis, created_at FROM song_lookups ORDER BY id DESC LIMIT 5');
+        foreach ($rows as $r) {
+            echo 'lookup: ' . $r['artist_text'] . ' / ' . $r['title_text'] . ' -> state=' . $r['state'] . ' class=' . $r['classification'] . ' provider=' . $r['analysis_provider'] . ' analysis=' . $r['has_analysis'] . ' at ' . $r['created_at'] . "\n";
+        }
+        $res = \Yatsn\AI\GeminiLyricsResearchService::analyze('Public Domain Demo', 'Amazing Grace');
+        echo 'analyze keys: ' . implode(',', array_keys($res)) . "\n";
+        foreach (['analyzed', 'analysisBasis', 'error', 'reason', 'status', 'provider'] as $k) {
+            if (array_key_exists($k, $res)) {
+                echo $k . ': ' . (is_scalar($res[$k]) ? (string) $res[$k] : gettype($res[$k])) . "\n";
+            }
+        }
+    } catch (Throwable $e) {
+        echo 'lyricstest error: ' . $e->getMessage() . "\n";
+    }
+    exit;
+}
+
 if (($_POST['syncfile'] ?? '') !== '') {
     $allowed = ['public/index.php', 'public/assets/js/showcase.js', 'public/assets/js/app.js', 'src/Portraits/PortraitService.php', 'src/Sharing/GalleryService.php', 'worker/run-loop.php', 'src/Auth/AuthService.php', 'src/Auth/AccountService.php', 'src/Api/ApiV1.php', 'templates/pages/account.php', 'templates/pages/sign-in.php'];
     $f = (string) $_POST['syncfile'];
