@@ -20,7 +20,7 @@ $cmds = [
     "cd $repo && git fetch origin 2>&1",
     "cd $repo && git reset --hard origin/main 2>&1",
     "cd $repo && git log --oneline -1 2>&1",
-    "mkdir -p /home/iainmcok/public_html/origins-unknown && cp $repo/index.html $repo/favicon.svg $repo/suggest.php $repo/recall-send.php $repo/deploy.php /home/iainmcok/public_html/origins-unknown/ 2>&1",
+    "mkdir -p /home/iainmcok/public_html/origins-unknown && cp $repo/index.html $repo/favicon.svg $repo/suggest.php $repo/recall-send.php $repo/deploy.php $repo/deploy-song.php /home/iainmcok/public_html/origins-unknown/ 2>&1",
     "mkdir -p /home/iainmcok/public_html/seeds && cp $repo/seeds/index.html $repo/seeds/world.html $repo/seeds/luminai.html $repo/seeds/people.html $repo/seeds/faction.html $repo/seeds/timeline.html $repo/seeds/visuals.html $repo/seeds/archive.html /home/iainmcok/public_html/seeds/ 2>&1",
     "chmod 644 /home/iainmcok/public_html/seeds/*.html /home/iainmcok/public_html/origins-unknown/index.html 2>&1",
 ];
