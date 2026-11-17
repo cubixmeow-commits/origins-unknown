@@ -21,6 +21,18 @@ $appdir = '/home/iainmcok/public_html/museproject';
 $appUrl = 'https://iainreid.dev/museproject';
 $log = '/home/iainmcok/museproject-seed.log';
 $done = $appdir . '/.seed-done';
+if (($_POST['debug'] ?? '') === '1') {
+    echo 'php: ' . PHP_VERSION . "\n";
+    echo 'public htaccess: ' . (is_file($appdir . '/public/.htaccess') ? 'exists' : 'missing') . "\n";
+    echo 'var writable: ' . (is_writable($appdir . '/var') ? 'yes' : 'no') . "\n";
+    foreach (glob($appdir . '/var/log/*') ?: [] as $f) {
+        echo '== ' . basename($f) . "\n";
+        echo implode('', array_slice(file($f), -25));
+    }
+    $errlog = ini_get('error_log');
+    echo 'error_log ini: ' . $errlog . "\n";
+    exit;
+}
 if (($_POST['status'] ?? '') === '1') {
     echo 'seed_done: ' . (file_exists($done) ? 'yes' : 'no') . "\n";
     echo 'app_dir: ' . (is_dir($appdir) ? 'exists' : 'missing') . "\n";
