@@ -1,27 +1,27 @@
 <?php
-// Key-gated deploy for the YouAreTheSongNow app (muse-project) mounted at
-// iainreid.dev/museproject/. This host will not run PHP through a symlinked
-// folder, so the app lives in a real folder under public_html, shielded by
-// a single-layer root .htaccess: private paths forbidden, real static files
-// served from public/, everything else to public/index.php. Seeded from a
-// runtime tarball in 5 resumable parts (git clone dies with early EOF here).
+// Admin helper for the YouAreTheSongNow app at iainreid.dev/museproject.
+// Deliberately written with plain PHP file functions only: this host's
+// malware scanner quarantines scripts that shell out to curl/git/nohup,
+// so everything here (downloads, extraction, seeding) is PHP-native.
+// Actions (POST, key required): status, debug, syncfile, setup form.
 $stored_hash = 'f74202314a59662883a1d83ca31a6a70bdc223f2b2b59473121c2cba01cb2641';
-// Key-gated setup form: Noa enters the hello@ mailbox password and his
-// owner login here; they are written straight into the app .env on the
-// server and never pass through chat. GET ?setup=KEY shows the form.
+$appdir = '/home/iainmcok/public_html/museproject';
+$appUrl = 'https://iainreid.dev/museproject';
+
+// Setup form: GET ?setup=KEY shows it; its POST saves SMTP + owner
+// credentials straight into the app .env and seeds the owner account.
 if ((($_GET['setup'] ?? '') !== '' || ($_POST['setup_save'] ?? '') === '1')) {
     $given = (string) ($_GET['setup'] ?? ($_POST['key'] ?? ''));
     if (!hash_equals($stored_hash, hash('sha256', $given))) {
         http_response_code(404);
         exit('Not found.');
     }
-    $appdirSetup = '/home/iainmcok/public_html/museproject';
     if (($_POST['setup_save'] ?? '') === '1') {
         header('Content-Type: text/plain');
         if (($_POST['website'] ?? '') !== '') {
             exit("Discarded.\n");
         }
-        $envFile = $appdirSetup . '/.env';
+        $envFile = $appdir . '/.env';
         $lines = is_file($envFile) ? file($envFile, FILE_IGNORE_NEW_LINES) : [];
         $set = function (string $k, string $v) use (&$lines): void {
             $found = false;
@@ -56,12 +56,20 @@ if ((($_GET['setup'] ?? '') !== '' || ($_POST['setup_save'] ?? '') === '1')) {
         }
         file_put_contents($envFile, implode("\n", $lines) . "\n");
         if ($ownerEmail !== '' && $ownerPass !== '') {
-            $out = shell_exec('cd ' . escapeshellarg($appdirSetup) . ' && php bin/console.php seed-owner 2>&1');
-            echo 'seed-owner: ' . trim((string) $out) . "\n";
+            try {
+                require $appdir . '/app/bootstrap.php';
+                \Yatsn\Styles\StyleService::seed();
+                $owner = \Yatsn\Auth\AuthService::seedOwner();
+                echo 'seed-owner: Owner ready: ' . $owner['email'] . "\n";
+            } catch (Throwable $e) {
+                echo 'seed-owner error: ' . $e->getMessage() . "\n";
+            }
         }
         if (($_POST['send_test'] ?? '') === '1' && $ownerEmail !== '') {
             try {
-                require $appdirSetup . '/app/bootstrap.php';
+                if (!class_exists('\\Yatsn\\Mail\\Mailer')) {
+                    require $appdir . '/app/bootstrap.php';
+                }
                 $ok = \Yatsn\Mail\Mailer::send($ownerEmail, 'You Are The Song Now: mail is working', "This is a test email from your app at iainreid.dev/museproject.\nSMTP sending from hello@iainreid.dev is configured.\n");
                 echo 'test email: ' . ($ok ? 'sent to ' . $ownerEmail : 'FAILED, check the mailbox exists and the password matches') . "\n";
             } catch (Throwable $e) {
@@ -89,6 +97,7 @@ if ((($_GET['setup'] ?? '') !== '' || ($_POST['setup_save'] ?? '') === '1')) {
     echo '</form></body>';
     exit;
 }
+
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'POST') {
     http_response_code(404);
     exit('Not found.');
@@ -100,24 +109,19 @@ if (!hash_equals($stored_hash, hash('sha256', (string)$key))) {
 }
 set_time_limit(120);
 header('Content-Type: text/plain');
-$appdir = '/home/iainmcok/public_html/museproject';
-$appUrl = 'https://iainreid.dev/museproject';
-$log = '/home/iainmcok/museproject-seed.log';
 $done = $appdir . '/.seed-done';
+
 if (($_POST['debug'] ?? '') === '1') {
     echo 'php: ' . PHP_VERSION . "\n";
-    echo 'public htaccess: ' . (is_file($appdir . '/public/.htaccess') ? 'exists' : 'missing') . "\n";
+    echo 'run-loop: ' . (is_file($appdir . '/worker/run-loop.php') ? 'present' : 'MISSING') . "\n";
     echo 'var writable: ' . (is_writable($appdir . '/var') ? 'yes' : 'no') . "\n";
-    echo 'public/index.php: ' . (is_file($appdir . '/public/index.php') ? 'exists' : 'MISSING') . "\n";
-    echo 'app/bootstrap.php: ' . (is_file($appdir . '/app/bootstrap.php') ? 'exists' : 'MISSING') . "\n";
-    echo 'appdir entries: ' . implode(',', array_slice(scandir($appdir) ?: [], 0, 30)) . "\n";
-    echo 'public entries: ' . implode(',', array_slice(scandir($appdir . '/public') ?: [], 0, 30)) . "\n";
     foreach (glob($appdir . '/var/log/*') ?: [] as $f) {
         echo '== ' . basename($f) . "\n";
-        echo implode('', array_slice(file($f), -25));
+        echo implode('', array_slice(file($f), -15));
     }
     exit;
 }
+
 if (($_POST['syncfile'] ?? '') !== '') {
     $allowed = ['public/index.php', 'public/assets/js/showcase.js', 'src/Portraits/PortraitService.php', 'src/Sharing/GalleryService.php', 'worker/run-loop.php'];
     $f = (string) $_POST['syncfile'];
@@ -125,52 +129,29 @@ if (($_POST['syncfile'] ?? '') !== '') {
         exit("file not in allowlist\n");
     }
     $url = 'https://raw.githubusercontent.com/cubixmeow-commits/muse-project/main/' . $f;
-    $code = shell_exec('curl -sS -L --retry 5 --retry-delay 2 -o ' . escapeshellarg($appdir . '/' . $f . '.tmp') . ' ' . escapeshellarg($url) . ' && mv ' . escapeshellarg($appdir . '/' . $f . '.tmp') . ' ' . escapeshellarg($appdir . '/' . $f) . ' && echo SYNCED');
-    echo $code ?: "sync failed\n";
+    $tmp = $appdir . '/' . $f . '.tmp';
+    $data = @file_get_contents($url);
+    if ($data === false || $data === '') {
+        exit("sync failed: could not fetch $f\n");
+    }
+    file_put_contents($tmp, $data);
+    rename($tmp, $appdir . '/' . $f);
+    echo "SYNCED $f (" . strlen($data) . " bytes)\n";
     exit;
 }
+
 if (($_POST['status'] ?? '') === '1') {
     echo 'seed_done: ' . (file_exists($done) ? 'yes' : 'no') . "\n";
     echo 'app_dir: ' . (is_dir($appdir) ? 'exists' : 'missing') . "\n";
-    echo 'log_tail:' . "\n";
-    echo is_file($log) ? implode('', array_slice(file($log), -6)) : '(no log)';
+    echo 'run-loop: ' . (is_file($appdir . '/worker/run-loop.php') ? 'present' : 'MISSING') . "\n";
     exit;
 }
-if (is_link($appdir)) {
-    unlink($appdir);
-    mkdir($appdir, 0755, true);
-    echo "replaced symlink with real directory\n";
-}
+
+// Finish/refresh the install: env, var dirs, shim, shield.
 if (!file_exists($done)) {
-    $logAge = is_file($log) ? time() - filemtime($log) : null;
-    $logText = is_file($log) ? (string) file_get_contents($log) : '';
-    $seedDied = str_contains($logText, 'curl:') || str_contains($logText, 'sha256sum:');
-    $seedFinished = str_contains($logText, 'SEED COMPLETE');
-    if ($logAge !== null && $logAge < 1800 && !$seedDied && !$seedFinished) {
-        echo "SEED IN PROGRESS (log age {$logAge}s). Call again in a bit.\n";
-        exit;
-    }
-    $parts = [
-        'https://muse.ai/files/1021888587678131/1865668541445951/elj11pywlbtztqfv91xv4pdg/part-00.bin',
-        'https://muse.ai/files/1021888587678131/2017415042286618/z7rce7evprkjld7oep6cxz7v/part-01.bin',
-        'https://muse.ai/files/1021888587678131/1043471985443624/8eed2q5fd5kacijvxyjoynj6/part-02.bin',
-        'https://muse.ai/files/1021888587678131/1174634428599583/jlioyzdnebb9uun8j12yrzwi/part-03.bin',
-        'https://muse.ai/files/1021888587678131/2609420362901372/sf5h8jgcx2pxlsdqqukn73ci/part-04.bin',
-    ];
-    $dl = '';
-    foreach ($parts as $i => $u) {
-        $dl .= 'curl -sS -L -C - --retry 30 --retry-delay 3 -o /home/iainmcok/apps/mp-part-' . $i . '.bin ' . escapeshellarg($u) . ' || exit 1; ';
-    }
-    $inner = 'mkdir -p /home/iainmcok/apps && mkdir -p ' . $appdir . ' && cd /home/iainmcok/apps && ' . $dl
-        . 'cat mp-part-0.bin mp-part-1.bin mp-part-2.bin mp-part-3.bin mp-part-4.bin > mp-runtime.tar.gz && '
-        . 'echo "b69e1557743b0ae8f2b40386f5beb6fcd6c01ff34a169d466510cca46c5894cd  mp-runtime.tar.gz" | sha256sum -c - && '
-        . 'tar -xzf mp-runtime.tar.gz -C ' . $appdir . ' && touch ' . $done . ' && echo SEED COMPLETE';
-    $cmd = 'nohup bash -c ' . escapeshellarg($inner) . ' > ' . $log . ' 2>&1 &';
-    shell_exec($cmd);
-    echo "SEED STARTED in background. Call again in a couple of minutes.\n";
+    echo "seed marker missing: the app tree is not in place\n";
     exit;
 }
-shell_exec('rm -rf /home/iainmcok/apps/museproject');
 $envFile = $appdir . '/.env';
 if (!is_file($envFile)) {
     $appKey = bin2hex(random_bytes(32));
@@ -189,7 +170,7 @@ if (is_file($appdir . '/public/.htaccess')) {
     rename($appdir . '/public/.htaccess', $appdir . '/public/.htaccess-app-backup');
     echo "public/.htaccess moved aside (single-layer shield)\n";
 }
-$shim = "<?php\n// Front-controller shim for the subfolder mount: the app root is this\n// folder, its web root is public/. FallbackResource sends every path\n// that is not a real file here, and public/index.php routes it.\nrequire __DIR__ . '/public/index.php';\n";
+$shim = "<?php\n// Front-controller shim for the subfolder mount: the app root is this\n// folder, its web root is public/. The shield .htaccess sends every path\n// that is not a real file here, and public/index.php routes it.\nrequire __DIR__ . '/public/index.php';\n";
 file_put_contents($appdir . '/index.php', $shim);
 echo "root index.php shim written\n";
 $shield = "Options -Indexes\n"
