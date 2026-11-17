@@ -40,7 +40,7 @@ if ((($_GET['setup'] ?? '') !== '' || ($_POST['setup_save'] ?? '') === '1')) {
         $ownerPass = (string) ($_POST['owner_password'] ?? '');
         if ($mailPass !== '') {
             $set('MAIL_TRANSPORT', 'smtp');
-            $set('MAIL_HOST', 'mail.iainreid.dev');
+            $set('MAIL_HOST', 'server365.web-hosting.com');
             $set('MAIL_PORT', '465');
             $set('MAIL_ENCRYPTION', 'ssl');
             $set('MAIL_USERNAME', 'hello@iainreid.dev');
@@ -144,6 +144,25 @@ if (($_POST['mailtest'] ?? '') === '1') {
         $greet = fgets($fp, 512);
         echo "$remote -> OK greeting: " . trim((string) $greet) . "\n";
         fclose($fp);
+    }
+    exit;
+}
+
+if (($_POST['fixmailhost'] ?? '') === '1') {
+    // mail.iainreid.dev does not answer on 465 from this server; the server
+    // hostname does. Rewrite MAIL_HOST in the app .env and re-test.
+    $envFile = $appdir . '/.env';
+    $env = (string) file_get_contents($envFile);
+    $env = preg_replace('/^MAIL_HOST=.*$/m', 'MAIL_HOST=server365.web-hosting.com', $env);
+    file_put_contents($envFile, $env);
+    echo "MAIL_HOST set to server365.web-hosting.com\n";
+    try {
+        require $appdir . '/app/bootstrap.php';
+        $to = (string) \Yatsn\Support\Config::get('owner.email', '');
+        $ok = \Yatsn\Mail\Mailer::send($to, 'You Are The Song Now: mail is working', "This is a test email from your app at iainreid.dev/museproject.\nSMTP sending from hello@iainreid.dev is configured.\n");
+        echo 'test email: ' . ($ok ? 'sent to ' . $to : 'FAILED') . "\n";
+    } catch (Throwable $e) {
+        echo 'test email error: ' . $e->getMessage() . "\n";
     }
     exit;
 }
