@@ -86,6 +86,13 @@ if (!is_file($envFile)) {
     echo ".env written\n";
 }
 $shield = "Options -Indexes\nRewriteEngine On\nRewriteRule ^\\.env(\$|/) - [F,L]\nRewriteRule ^(app|src|templates|var|bin|worker|database|assets|tests|design|docs|development-vault)/ - [F,L]\nRewriteRule ^(.*)\$ public/\$1 [L]\n";
+foreach (['var', 'var/data', 'var/storage', 'var/log'] as $d) {
+    if (!is_dir($appdir . '/' . $d)) {
+        mkdir($appdir . '/' . $d, 0775, true);
+    }
+    chmod($appdir . '/' . $d, 0775);
+}
+echo "var dirs ready\n";
 file_put_contents($appdir . '/.htaccess', $shield);
 echo "shield .htaccess written\n";
 echo "DEPLOY DONE\n";
