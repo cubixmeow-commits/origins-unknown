@@ -167,6 +167,44 @@ if (($_POST['fixmailhost'] ?? '') === '1') {
     exit;
 }
 
+if (($_POST['mergenv'] ?? '') === '1') {
+    // Merge provider keys/settings from the old project's .env into the
+    // server .env. Deployment-owned keys are never overwritten.
+    $deny = ['APP_URL', 'APP_KEY', 'APP_ENV', 'APP_DEBUG', 'DATABASE_PATH', 'PRIVATE_STORAGE_PATH', 'LOG_PATH', 'AI_PROVIDERS_ENABLED'];
+    $blob = base64_decode((string) ($_POST['envblob'] ?? ''), true);
+    if ($blob === false || $blob === '') {
+        exit("mergenv: empty payload\n");
+    }
+    $envFile = $appdir . '/.env';
+    $lines = is_file($envFile) ? file($envFile, FILE_IGNORE_NEW_LINES) : [];
+    $merged = [];
+    foreach (explode("\n", $blob) as $line) {
+        $line = trim($line);
+        if ($line === '' || str_starts_with($line, '#') || !str_contains($line, '=')) {
+            continue;
+        }
+        [$k, $v] = explode('=', $line, 2);
+        $k = trim($k);
+        if ($k === '' || in_array($k, $deny, true) || str_starts_with($k, 'MAIL_') || str_starts_with($k, 'OWNER_')) {
+            continue;
+        }
+        $found = false;
+        foreach ($lines as $i => $existing) {
+            if (str_starts_with($existing, $k . '=')) {
+                $lines[$i] = $k . '=' . $v;
+                $found = true;
+            }
+        }
+        if (!$found) {
+            $lines[] = $k . '=' . $v;
+        }
+        $merged[] = $k;
+    }
+    file_put_contents($envFile, implode("\n", $lines) . "\n");
+    echo 'merged ' . count($merged) . " keys: " . implode(', ', $merged) . "\n";
+    exit;
+}
+
 if (($_POST['syncfile'] ?? '') !== '') {
     $allowed = ['public/index.php', 'public/assets/js/showcase.js', 'public/assets/js/app.js', 'src/Portraits/PortraitService.php', 'src/Sharing/GalleryService.php', 'worker/run-loop.php', 'src/Auth/AuthService.php', 'src/Auth/AccountService.php', 'src/Api/ApiV1.php', 'templates/pages/account.php', 'templates/pages/sign-in.php'];
     $f = (string) $_POST['syncfile'];
