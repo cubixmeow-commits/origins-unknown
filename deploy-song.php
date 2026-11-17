@@ -261,6 +261,9 @@ if (($_POST['lyricstest'] ?? '') === '1') {
                 echo $k . ': ' . (is_scalar($res[$k]) ? (string) $res[$k] : gettype($res[$k])) . "\n";
             }
         }
+        echo 'providerAttempts: ' . json_encode($res['providerAttempts'] ?? null) . "\n";
+        echo 'gemini_model: ' . (string) \Yatsn\Support\Config::get('ai.gemini_model', '') . "\n";
+        echo 'key_present: ' . ((string) \Yatsn\Support\Config::get('ai.gemini_api_key', '') !== '' ? 'yes' : 'no') . "\n";
     } catch (Throwable $e) {
         echo 'lyricstest error: ' . $e->getMessage() . "\n";
     }
