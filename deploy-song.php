@@ -25,6 +25,10 @@ if (($_POST['debug'] ?? '') === '1') {
     echo 'php: ' . PHP_VERSION . "\n";
     echo 'public htaccess: ' . (is_file($appdir . '/public/.htaccess') ? 'exists' : 'missing') . "\n";
     echo 'var writable: ' . (is_writable($appdir . '/var') ? 'yes' : 'no') . "\n";
+    echo 'public/index.php: ' . (is_file($appdir . '/public/index.php') ? 'exists' : 'MISSING') . "\n";
+    echo 'app/bootstrap.php: ' . (is_file($appdir . '/app/bootstrap.php') ? 'exists' : 'MISSING') . "\n";
+    echo 'appdir entries: ' . implode(',', array_slice(scandir($appdir) ?: [], 0, 30)) . "\n";
+    echo 'public entries: ' . implode(',', array_slice(scandir($appdir . '/public') ?: [], 0, 30)) . "\n";
     foreach (glob($appdir . '/var/log/*') ?: [] as $f) {
         echo '== ' . basename($f) . "\n";
         echo implode('', array_slice(file($f), -25));
