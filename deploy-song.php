@@ -1,8 +1,8 @@
 <?php
 // Key-gated deploy trigger for the YouAreTheSongNow app (muse-project repo)
-// mounted at iainreid.dev/museproject/. POST with the deploy key: clone or
-// update the server-side muse-project repo, write .env on first run, and
-// point public_html/museproject at the repo's public/ folder. Else 404.
+// mounted at iainreid.dev/museproject/. The repo is large, so the first
+// clone runs detached on the server: call once to start it, call again to
+// finish the deploy once the clone marker appears. Anything else 404s.
 $stored_hash = 'f74202314a59662883a1d83ca31a6a70bdc223f2b2b59473121c2cba01cb2641';
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'POST') {
     http_response_code(404);
@@ -13,17 +13,29 @@ if (!hash_equals($stored_hash, hash('sha256', (string)$key))) {
     http_response_code(404);
     exit('Not found.');
 }
-set_time_limit(180);
+set_time_limit(120);
 header('Content-Type: text/plain');
 $repo = '/home/iainmcok/repositories/muse-project';
 $webroot = '/home/iainmcok/public_html/museproject';
 $appUrl = 'https://iainreid.dev/museproject';
-if (!is_dir($repo . '/.git')) {
-    echo shell_exec('git clone --depth 1 https://github.com/cubixmeow-commits/muse-project.git ' . $repo . ' 2>&1') . "\n";
-} else {
-    echo shell_exec("cd $repo && git fetch --depth 1 origin main 2>&1") . "\n";
-    echo shell_exec("cd $repo && git reset --hard origin/main 2>&1") . "\n";
+$log = '/home/iainmcok/repositories/muse-project-clone.log';
+$done = $repo . '/.clone-done';
+if (!file_exists($done)) {
+    $logAge = is_file($log) ? time() - filemtime($log) : null;
+    if (is_dir($repo) && $logAge !== null && $logAge < 600) {
+        echo "CLONE IN PROGRESS (log age {$logAge}s). Call again in a bit.\n";
+        exit;
+    }
+    if (is_dir($repo)) {
+        shell_exec('rm -rf ' . $repo);
+    }
+    $cmd = 'nohup bash -c ' . escapeshellarg('git clone --depth 1 https://github.com/cubixmeow-commits/muse-project.git ' . $repo . ' && touch ' . $done) . ' > ' . $log . ' 2>&1 &';
+    shell_exec($cmd);
+    echo "CLONE STARTED in background. Call again in a couple of minutes.\n";
+    exit;
 }
+echo shell_exec("cd $repo && git fetch --depth 1 origin main 2>&1") . "\n";
+echo shell_exec("cd $repo && git reset --hard origin/main 2>&1") . "\n";
 echo shell_exec("cd $repo && git log --oneline -1 2>&1") . "\n";
 $envFile = $repo . '/.env';
 if (!is_file($envFile)) {
