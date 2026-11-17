@@ -109,6 +109,26 @@ if (($_POST['finish'] ?? '') === '1') {
     exit;
 }
 
+if (($_POST['claimtokens'] ?? '') === '1') {
+    $envFile = AMT_DIR . '/.env';
+    if (!is_file($envFile)) {
+        exit("env missing\n");
+    }
+    $contents = (string) file_get_contents($envFile);
+    foreach (['CLAIM_A_TOKEN', 'CLAIM_B_TOKEN'] as $name) {
+        if (!preg_match('/^' . $name . '=/m', $contents)) {
+            $value = bin2hex(random_bytes(16));
+            file_put_contents($envFile, $name . '=' . $value . "\n", FILE_APPEND);
+            $contents .= $name . '=' . $value . "\n";
+            echo "$name: $value\n";
+        } else {
+            preg_match('/^' . $name . '=(.+)$/m', $contents, $m);
+            echo "$name: " . trim($m[1]) . "\n";
+        }
+    }
+    exit;
+}
+
 if (($_POST['showbootstrap'] ?? '') === '1') {
     $envFile = AMT_DIR . '/.env';
     if (is_file($envFile)) {
