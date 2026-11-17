@@ -22,7 +22,7 @@ $log = '/home/iainmcok/repositories/muse-project-clone.log';
 $done = $repo . '/.clone-done';
 if (!file_exists($done)) {
     $logAge = is_file($log) ? time() - filemtime($log) : null;
-    if (is_dir($repo) && $logAge !== null && $logAge < 600) {
+    if (is_dir($repo) && $logAge !== null && $logAge < 1800) {
         echo "CLONE IN PROGRESS (log age {$logAge}s). Call again in a bit.\n";
         exit;
     }
