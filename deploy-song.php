@@ -54,6 +54,13 @@ if ((($_GET['setup'] ?? '') !== '' || ($_POST['setup_save'] ?? '') === '1')) {
             $set('OWNER_PASSWORD', $ownerPass);
             echo "owner credentials saved\n";
         }
+        foreach (['GEMINI_API_KEY' => 'api_gemini', 'GROQ_API_KEY' => 'api_groq', 'REPLICATE_API_TOKEN' => 'api_replicate', 'FAL_KEY' => 'api_fal'] as $envKey => $field) {
+            $val = trim((string) ($_POST[$field] ?? ''));
+            if ($val !== '') {
+                $set($envKey, $val);
+                echo "$envKey saved\n";
+            }
+        }
         file_put_contents($envFile, implode("\n", $lines) . "\n");
         if ($ownerEmail !== '' && $ownerPass !== '') {
             try {
@@ -92,6 +99,12 @@ if ((($_GET['setup'] ?? '') !== '' || ($_POST['setup_save'] ?? '') === '1')) {
     echo '<p><label>hello@ mailbox password<br><input type="password" name="mail_password" style="width:100%;padding:.5rem"></label></p>';
     echo '<p><label>Your owner email<br><input type="email" name="owner_email" style="width:100%;padding:.5rem"></label></p>';
     echo '<p><label>Your owner password<br><input type="password" name="owner_password" style="width:100%;padding:.5rem"></label></p>';
+    echo '<h2 style="font-size:1.05rem;margin-top:1.5rem">API keys (optional, fill only what you have)</h2>';
+    echo '<p>Copy these from your provider accounts. Gemini powers the song and lyrics search. Leave any field blank to keep what is already saved.</p>';
+    echo '<p><label>Gemini API key<br><input type="password" name="api_gemini" style="width:100%;padding:.5rem"></label></p>';
+    echo '<p><label>Groq API key<br><input type="password" name="api_groq" style="width:100%;padding:.5rem"></label></p>';
+    echo '<p><label>Replicate API token<br><input type="password" name="api_replicate" style="width:100%;padding:.5rem"></label></p>';
+    echo '<p><label>Fal key<br><input type="password" name="api_fal" style="width:100%;padding:.5rem"></label></p>';
     echo '<p><label><input type="checkbox" name="send_test" value="1" checked> Send me a test email after saving</label></p>';
     echo '<p><button type="submit" style="padding:.6rem 1.2rem">Save and seed owner</button></p>';
     echo '</form></body>';
