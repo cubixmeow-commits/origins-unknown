@@ -6,7 +6,10 @@ declare(strict_types=1);
 
 const AMT_KEY_HASH = 'e683c7105d29cbaee581384f9afaeb094e178181c44efed132ea148558f61c5a';
 const AMT_DIR = '/home/iainmcok/public_html/amt';
-const AMT_RAW = 'https://raw.githubusercontent.com/cubixmeow-commits/agent-mow-toolkit/main/amt/';
+// The toolkit repo is private (2026-11-17): file fetches use the GitHub API with a
+// read-only fine-grained token, stored outside the web root, entered via the token form.
+const AMT_TOKEN_FILE = '/home/iainmcok/.deploy-amt-token';
+const AMT_REPO_API = 'https://api.github.com/repos/cubixmeow-commits/agent-mow-toolkit/contents/amt/';
 
 header('Content-Type: text/plain; charset=UTF-8');
 
@@ -17,8 +20,38 @@ if (!hash_equals(AMT_KEY_HASH, hash('sha256', $key))) {
     exit;
 }
 
+// Token form: GET ?tokenform=1&key=KEY shows it; its POST saves the GitHub token
+// straight to the server-side token file. The token never passes through chat.
+if (($_GET['tokenform'] ?? '') === '1' || ($_POST['token_save'] ?? '') === '1') {
+    header('Content-Type: text/html; charset=UTF-8');
+    if (($_POST['token_save'] ?? '') === '1') {
+        if (($_POST['website'] ?? '') !== '') {
+            exit('Discarded.');
+        }
+        $token = trim((string) ($_POST['ghtoken'] ?? ''));
+        if ($token === '' || strlen($token) < 20) {
+            exit('That does not look like a token. Nothing saved.');
+        }
+        file_put_contents(AMT_TOKEN_FILE, $token . "\n");
+        @chmod(AMT_TOKEN_FILE, 0600);
+        exit('Token saved. File syncs will now use it.');
+    }
+    $has = is_file(AMT_TOKEN_FILE) ? 'A token is already stored; submitting replaces it.' : 'No token stored yet.';
+    echo '<!doctype html><meta charset="utf-8"><title>amt deploy token</title>'
+        . '<body style="font-family:system-ui;max-width:32rem;margin:3rem auto;padding:0 1rem">'
+        . '<h1>GitHub token for amt deploys</h1><p>' . $has . '</p>'
+        . '<form method="post"><input type="hidden" name="token_save" value="1">'
+        . '<input type="hidden" name="key" value="' . htmlspecialchars($key, ENT_QUOTES) . '">'
+        . '<input type="text" name="website" style="display:none" tabindex="-1" autocomplete="off">'
+        . '<label>Fine-grained token (agent-mow-toolkit, Contents read-only)<br>'
+        . '<input type="password" name="ghtoken" style="width:100%;padding:.5rem" autocomplete="off" required></label>'
+        . '<p><button type="submit" style="padding:.5rem 1.2rem">Save token</button></p></form></body>';
+    exit;
+}
+
 if (($_POST['status'] ?? '') === '1') {
     echo 'app_dir: ' . (is_dir(AMT_DIR) ? 'exists' : 'missing') . "\n";
+    echo 'github_token: ' . (is_file(AMT_TOKEN_FILE) ? 'stored' : 'MISSING') . "\n";
     echo 'index: ' . (is_file(AMT_DIR . '/index.php') ? 'present' : 'MISSING') . "\n";
     echo 'env: ' . (is_file(AMT_DIR . '/.env') ? 'present' : 'MISSING') . "\n";
     echo 'sqlite: ' . (is_file(AMT_DIR . '/var/data/amt.sqlite') ? 'present' : 'not yet created') . "\n";
@@ -31,19 +64,15 @@ if (($_POST['syncfile'] ?? '') !== '') {
     if (!in_array($f, $allowed, true)) {
         exit("file not in allowlist\n");
     }
-    // Fetch at the branch's current commit SHA: SHA-pinned raw URLs are immutable,
-    // so a cached copy is always the right copy (branch URLs served stale content here).
-    $ctx = stream_context_create(['http' => ['header' => "User-Agent: deploy-amt\r\n", 'timeout' => 20]]);
-    $sha = '';
-    $meta = @file_get_contents('https://api.github.com/repos/cubixmeow-commits/agent-mow-toolkit/commits/main', false, $ctx);
-    if ($meta !== false) {
-        $decoded = json_decode($meta, true);
-        $sha = (string) ($decoded['sha'] ?? '');
+    // Private repo: fetch through the GitHub contents API with the stored token.
+    // The raw accept header returns the file bytes directly, and API responses are
+    // not CDN-cached, so branch fetches are fresh (raw branch URLs served stale copies).
+    $token = is_file(AMT_TOKEN_FILE) ? trim((string) file_get_contents(AMT_TOKEN_FILE)) : '';
+    if ($token === '') {
+        exit("sync failed: no GitHub token stored (open deploy-amt.php?tokenform=1 with the deploy key)\n");
     }
-    $url = $sha !== ''
-        ? 'https://raw.githubusercontent.com/cubixmeow-commits/agent-mow-toolkit/' . $sha . '/amt/' . $f
-        : AMT_RAW . $f . '?v=' . time();
-    $data = @file_get_contents($url, false, $ctx);
+    $ctx = stream_context_create(['http' => ['header' => "User-Agent: deploy-amt\r\nAuthorization: Bearer $token\r\nAccept: application/vnd.github.raw+json\r\n", 'timeout' => 20]]);
+    $data = @file_get_contents(AMT_REPO_API . $f . '?ref=main', false, $ctx);
     if ($data === false || $data === '') {
         exit("sync failed: could not fetch $f\n");
     }
